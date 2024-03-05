@@ -1,0 +1,26 @@
+{
+  "name": "unplugin-todos",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.mjs",
+  "scripts": {
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tmg0/unplugin-todos.git"
+  },
+  "keywords": [
+    "unplugin",
+    "todo",
+    "vite",
+    "esbuild",
+    "nodejs"
+  ],
+  "author": "tmg0 <zekun.jin@foxmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tmg0/unplugin-todos/issues"
+  },
+  "homepage": "https://github.com/tmg0/unplugin-todos#readme"
+}
