@@ -1,25 +1,25 @@
 {
   "compilerOptions": {
     "target": "esnext",
+    "jsx": "preserve",
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "rootDir": ".",
     "module": "esnext",
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "strict": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictPropertyInitialization": false,
-    "experimentalDecorators": true,
-    "declaration": true,
     "resolveJsonModule": true,
-    "rootDir": ".",
-    "baseUrl": ".",
-    "jsx": "preserve",
     "types": [
       "vite/client"
     ],
-    "skipLibCheck": true,
+    "strict": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    "noUnusedLocals": true,
+    "declaration": true,
+    "esModuleInterop": true,
     "skipDefaultLibCheck": true,
-    "noUnusedLocals": true
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/dist", "test"]

@@ -1,17 +1,17 @@
 {
   "name": "unplugin-todos",
+  "type": "module",
   "version": "0.0.0",
   "description": "",
-  "main": "dist/index.mjs",
-  "type": "module",
-  "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "test": "vitest"
-  },
+  "author": "tmg0 <zekun.jin@foxmail.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/tmg0/unplugin-todos#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tmg0/unplugin-todos.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tmg0/unplugin-todos/issues"
   },
   "keywords": [
     "unplugin",
@@ -20,12 +20,12 @@
     "esbuild",
     "nodejs"
   ],
-  "author": "tmg0 <zekun.jin@foxmail.com>",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/tmg0/unplugin-todos/issues"
+  "main": "dist/index.mjs",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest"
   },
-  "homepage": "https://github.com/tmg0/unplugin-todos#readme",
   "dependencies": {
     "unplugin": "^1.8.0"
   },
