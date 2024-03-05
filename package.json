@@ -34,6 +34,7 @@
     "dist"
   ],
   "scripts": {
+    "dev": "vitest dev",
     "build": "unbuild",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -41,6 +42,9 @@
   },
   "dependencies": {
     "@rollup/pluginutils": "^5.1.0",
+    "@vue/compiler-sfc": "^3.4.21",
+    "acorn": "^8.11.3",
+    "magic-string": "^0.30.8",
     "unplugin": "^1.8.0"
   },
   "devDependencies": {
