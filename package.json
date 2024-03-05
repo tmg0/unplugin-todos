@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "description": "",
   "main": "dist/index.mjs",
+  "type": "module",
   "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "vitest"
   },
   "repository": {
@@ -22,5 +25,15 @@
   "bugs": {
     "url": "https://github.com/tmg0/unplugin-todos/issues"
   },
-  "homepage": "https://github.com/tmg0/unplugin-todos#readme"
+  "homepage": "https://github.com/tmg0/unplugin-todos#readme",
+  "dependencies": {
+    "unplugin": "^1.8.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.8.0",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3",
+    "unbuild": "^2.0.0",
+    "vitest": "^1.3.1"
+  }
 }
