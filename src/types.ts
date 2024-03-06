@@ -1,5 +1,12 @@
 import type { parse } from '@babel/parser'
+import type { FilterPattern } from '@rollup/pluginutils'
 import type MagicString from 'magic-string'
+
+export interface TodosOptions {
+  dev: boolean
+  include: FilterPattern
+  exclude: FilterPattern
+}
 
 export interface VueSFCTagContent {
   start: number
