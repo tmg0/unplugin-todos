@@ -1,29 +1,39 @@
-import { parse } from '@vue/compiler-sfc'
 import type MagicString from 'magic-string'
 import { getMagicString } from './utils'
-import { getScriptAST, getTemplateAST } from './ast'
-import type { VueAST, VueSFC } from './types'
+import { vueScriptTagRE, vueTemplateTagRE } from './regexp'
 
-export function parseVueSFC(code: string | MagicString, id: string): VueSFC {
-  const s = getMagicString(code)
-  const sfc = parse(s.original, { filename: id })
+function matchTagContent(original: string, re: RegExp) {
+  let start = 0
+  let end = 0
+  let code = ''
+  const match = re.exec(original)
 
-  const script = (() => {
-    if (sfc.descriptor.scriptSetup)
-      return ''
-    if (sfc.descriptor.script)
-      return ''
-
-    return ''
-  })()
-
-  const ast: VueAST = {
-    script: getScriptAST(script),
-    template: getTemplateAST(sfc.descriptor.template?.content ?? ''),
+  if (match) {
+    code = match[1]
+    start = match.index + match[0].indexOf(code)
+    end = start + code.length
   }
 
+  re.lastIndex = 0
+
   return {
-    sfc,
-    ast,
+    code,
+    start,
+    end,
+  }
+}
+
+export function parseVueSFC(code: string | MagicString, id: string) {
+  const s = getMagicString(code)
+  const original = s.original
+
+  const script = matchTagContent(original, vueScriptTagRE)
+  const template = matchTagContent(original, vueTemplateTagRE)
+
+  return {
+    s,
+    id,
+    script,
+    template,
   }
 }

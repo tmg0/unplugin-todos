@@ -8,14 +8,17 @@ import vueTemplate from './fixtures/template.vue?raw'
 
 describe('vue.js', () => {
   it('script', () => {
-
+    const sfc = parseVueSFC(vueScript, './fixtures/script.vue')
+    expect(sfc.script.code.includes('TODO')).toBe(true)
   })
 
   it('script setup', () => {
-
+    const sfc = parseVueSFC(vueScriptSetup, './fixtures/script-setup.vue')
+    expect(sfc.script.code.includes('TODO')).toBe(true)
   })
 
   it('template', () => {
-    expect(!!parseVueSFC(vueTemplate, './fixtures/template.vue')).toBe(true)
+    const sfc = parseVueSFC(vueTemplate, './fixtures/template.vue')
+    expect(sfc.template.code.includes('TODO')).toBe(true)
   })
 })
