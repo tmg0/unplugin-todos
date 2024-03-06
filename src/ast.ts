@@ -4,7 +4,7 @@ import type MagicString from 'magic-string'
 import { getMagicString } from './utils'
 import type { ASTHTMLNode } from './types'
 
-export function detectScript(code: string | MagicString) {
+export function detectJavascript(code: string | MagicString) {
   const s = getMagicString(code)
   return babelParser.parse(s.original)
 }

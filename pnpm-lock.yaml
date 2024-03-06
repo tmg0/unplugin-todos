@@ -23,6 +23,9 @@ dependencies:
   magic-string:
     specifier: ^0.30.8
     version: 0.30.8
+  pathe:
+    specifier: ^1.1.2
+    version: 1.1.2
   unplugin:
     specifier: ^1.8.0
     version: 1.8.0
@@ -3233,7 +3236,6 @@ packages:
 
   /pathe@1.1.2:
     resolution: {integrity: sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==}
-    dev: true
 
   /pathval@1.1.1:
     resolution: {integrity: sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==}
