@@ -24,9 +24,18 @@ export interface VueSFC {
 export type JsAST = ReturnType<typeof parse>
 
 export interface Comment {
-  file: 'html' | 'js'
+  id: string
   type: 'line' | 'block'
   original: string
   start: number
   end: number
+}
+
+export interface TodosContext {
+  version: string
+  options: TodosOptions
+
+  runServer: () => Promise<void>
+  collectComments: (code: string | MagicString, id: string, ctx: TodosContext) => void
+  getCommentMap: () => Record<string, Comment>
 }

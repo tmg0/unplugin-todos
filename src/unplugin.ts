@@ -3,6 +3,7 @@ import { createFilter } from '@rollup/pluginutils'
 import MagicString from 'magic-string'
 import type { TodosOptions } from './types'
 import { resolveOptions } from './options'
+import { createTodos } from './context'
 
 export const defaultIncludes = [/\.[jt]sx?$/, /\.vue$/, /\.vue\?vue/, /\.svelte$/]
 export const defaultExcludes = [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/]
@@ -11,6 +12,8 @@ const toArray = <T>(x: T | T[] | undefined | null): T[] => x == null ? [] : Arra
 
 const unplugin = createUnplugin<Partial<TodosOptions>>((rawOptions = {}) => {
   const options = resolveOptions(rawOptions)
+  const ctx = createTodos(options)
+
   const filter = createFilter(
     toArray(options.include as string[] || []).length
       ? options.include
@@ -37,6 +40,9 @@ const unplugin = createUnplugin<Partial<TodosOptions>>((rawOptions = {}) => {
         code: s.toString(),
         map: s.generateMap(),
       }
+    },
+    async buildStart() {
+      await ctx.init()
     },
   }
 })

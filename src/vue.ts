@@ -42,7 +42,7 @@ export function parseVueSFC(code: string | MagicString, id: string): VueSFC {
 
 export function normaliseVueComments(sfc: VueSFC): Comment[] {
   return [
-    ...normaliseJavascriptComments(sfc.script.code, { offset: sfc.script.start }),
-    ...normaliseHTMLComments(sfc.template.code, { offset: sfc.template.start }),
+    ...normaliseJavascriptComments(sfc.script.code, sfc.id, { offset: sfc.script.start }),
+    ...normaliseHTMLComments(sfc.template.code, sfc.id, { offset: sfc.template.start }),
   ]
 }

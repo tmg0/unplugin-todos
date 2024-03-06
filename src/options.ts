@@ -2,5 +2,5 @@ import { defu } from 'defu'
 import type { TodosOptions } from './types'
 
 export function resolveOptions(options: Partial<TodosOptions>) {
-  return defu(options, { dev: true })
+  return defu(options, { dev: true }) as TodosOptions
 }

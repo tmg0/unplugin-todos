@@ -10,13 +10,13 @@ export function detectJavascript(code: string | MagicString): JsAST {
   return babelParser.parse(s.original, { sourceType: hasESMSyntax(s.original) ? 'module' : undefined })
 }
 
-export function normaliseJavascriptComments(code: string | MagicString, options: { offset: number }): Comment[] {
+export function normaliseJavascriptComments(code: string | MagicString, id: string, options: { offset: number } = { offset: 0 }): Comment[] {
   const comments: Comment[] = []
   const ast = detectJavascript(code)
 
   ast.comments?.forEach((comment) => {
     comments.push({
-      file: 'js',
+      id,
       type: comment.type === 'CommentBlock' ? 'block' : 'line',
       original: comment.value.trim(),
       start: (comment.start ?? 0) + options.offset,
@@ -26,7 +26,7 @@ export function normaliseJavascriptComments(code: string | MagicString, options:
   return comments
 }
 
-export function normaliseHTMLComments(code: string | MagicString, options: { offset: number }): Comment[] {
+export function normaliseHTMLComments(code: string | MagicString, id: string, options: { offset: number } = { offset: 0 }): Comment[] {
   const comments: Comment[] = []
   const s = getMagicString(code)
 
@@ -35,7 +35,7 @@ export function normaliseHTMLComments(code: string | MagicString, options: { off
 
   while (match) {
     comments.push({
-      file: 'html',
+      id,
       type: 'block',
       original: match[1].trim(),
       start: match.index + options.offset,
