@@ -1,4 +1,3 @@
-import type { DomHandler } from 'htmlparser2'
 import type { parse } from '@babel/parser'
 import type MagicString from 'magic-string'
 
@@ -14,8 +13,6 @@ export interface VueSFC {
   script: VueSFCTagContent
   template: VueSFCTagContent
 }
-
-export type H5AST = DomHandler['dom']
 
 export type JsAST = ReturnType<typeof parse>
 

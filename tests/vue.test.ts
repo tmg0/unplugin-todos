@@ -1,13 +1,17 @@
 /// <reference types="vite/client" />
 
 import { describe, expect, it } from 'vitest'
+import { basename } from 'pathe'
 import { normaliseVueComments, parseVueSFC } from '../src/vue'
-import vueScriptSetup from './fixtures/script-setup.vue?raw'
+
+const fixtures = import.meta.glob('./fixtures/*.vue', { as: 'raw', eager: true })
 
 describe('vue.js', () => {
-  it('parser', () => {
-    const sfc = parseVueSFC(vueScriptSetup, './fixtures/script-setup.vue')
-    const comments = normaliseVueComments(sfc)
-    expect(comments.length).toBe(1)
+  Object.entries(fixtures).forEach(([id, raw]) => {
+    it(`fixture ${basename(id)}`, async () => {
+      const sfc = parseVueSFC(raw, id)
+      const comments = normaliseVueComments(sfc)
+      expect(comments.length).toBe(1)
+    })
   })
 })
