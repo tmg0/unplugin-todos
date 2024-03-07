@@ -1,7 +1,7 @@
 import type MagicString from 'magic-string'
 import { version } from '../package.json'
 import type { Comment, TodosContext, TodosOptions } from './types'
-import { resolveCommenets } from './resolve'
+import { resolveCommenets } from './resolvers'
 
 export function createTodos(options: TodosOptions) {
   const ctx = createInternalContext(options)

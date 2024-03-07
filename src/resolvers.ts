@@ -1,7 +1,9 @@
+import process from 'node:process'
 import type MagicString from 'magic-string'
 import { defu } from 'defu'
+import { join } from 'pathe'
 import { getMagicString, isHTML, isJavascript, isVue } from './utils'
-import type { Comment } from './types'
+import type { Comment, TodosContext } from './types'
 import { h5CommentRE, linefeedRE } from './regexp'
 import { parseVueSFC } from './vue'
 import { detectJavascript } from './detect'
@@ -82,4 +84,12 @@ export function resolveCommenets(code: string | MagicString, id: string): Commen
     return resolveVueComments(code, id)
 
   return []
+}
+
+export function resolveVscodeURL(comment: Comment, ctx: TodosContext) {
+  const filepath = join(process.cwd(), ctx.options.rootDir, comment.id)
+
+  return {
+    url: `vscode://file/${filepath}:${comment.line}`,
+  }
 }

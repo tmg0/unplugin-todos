@@ -4,6 +4,7 @@ import type MagicString from 'magic-string'
 
 export interface TodosOptions {
   dev: boolean
+  rootDir: string
   include: FilterPattern
   exclude: FilterPattern
 }
