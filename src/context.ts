@@ -1,15 +1,13 @@
 import type MagicString from 'magic-string'
 import { version } from '../package.json'
 import type { Comment, TodosContext, TodosOptions } from './types'
-import { isHTML, isJavascript, isVue } from './utils'
-import { normaliseHTMLComments, normaliseJavascriptComments } from './detect'
-import { normaliseVueComments, parseVueSFC } from './vue'
+import { resolveCommenets } from './resolve'
 
 export function createTodos(options: TodosOptions) {
   const ctx = createInternalContext(options)
 
-  function collectCommentsWithContext(code: string | MagicString, id: string) {
-    return ctx.collectComments(code, id, ctx)
+  function updateCommentsWithContext(code: string | MagicString, id: string) {
+    return ctx.updateComments(code, id, ctx)
   }
 
   function init() {
@@ -18,7 +16,7 @@ export function createTodos(options: TodosOptions) {
 
   return {
     init,
-    collectComments: collectCommentsWithContext,
+    updateComments: updateCommentsWithContext,
     getCommentMap: ctx.getCommentMap,
   }
 }
@@ -38,23 +36,14 @@ export function createInternalContext(options: TodosOptions): TodosContext {
     version,
     options,
     runServer,
-    collectComments,
+    updateComments,
     getCommentMap,
   }
 }
 
-function collectComments(code: string | MagicString, id: string, ctx: TodosContext) {
-  let _comments: Comment[] = []
+function updateComments(code: string | MagicString, id: string, ctx: TodosContext) {
   const _map = ctx.getCommentMap()
-
-  if (isJavascript(id))
-    _comments = [..._comments, ...normaliseJavascriptComments(code, id)]
-  if (isHTML(id))
-    _comments = [..._comments, ...normaliseHTMLComments(code, id)]
-  if (isVue(id)) {
-    const sfc = parseVueSFC(code, id)
-    _comments = [..._comments, ...normaliseVueComments(sfc)]
-  }
+  const _comments: Comment[] = resolveCommenets(code, id)
 
   return _comments
 }

@@ -1,8 +1,7 @@
 import type MagicString from 'magic-string'
 import { getMagicString } from './utils'
 import { vueScriptTagRE, vueTemplateTagRE } from './regexp'
-import { normaliseHTMLComments, normaliseJavascriptComments } from './detect'
-import type { Comment, VueSFC, VueSFCTagContent } from './types'
+import type { VueSFC, VueSFCTagContent } from './types'
 
 function matchTagContent(original: string, re: RegExp): VueSFCTagContent {
   let start = 0
@@ -38,11 +37,4 @@ export function parseVueSFC(code: string | MagicString, id: string): VueSFC {
     script,
     template,
   }
-}
-
-export function normaliseVueComments(sfc: VueSFC): Comment[] {
-  return [
-    ...normaliseJavascriptComments(sfc.script.code, sfc.id, { offset: sfc.script.start }),
-    ...normaliseHTMLComments(sfc.template.code, sfc.id, { offset: sfc.template.start }),
-  ]
 }

@@ -29,6 +29,7 @@ export interface Comment {
   original: string
   start: number
   end: number
+  line: number
 }
 
 export interface TodosContext {
@@ -36,6 +37,6 @@ export interface TodosContext {
   options: TodosOptions
 
   runServer: () => Promise<void>
-  collectComments: (code: string | MagicString, id: string, ctx: TodosContext) => void
+  updateComments: (code: string | MagicString, id: string, ctx: TodosContext) => void
   getCommentMap: () => Record<string, Comment>
 }
