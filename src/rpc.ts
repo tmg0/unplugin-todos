@@ -1,7 +1,18 @@
-import process from 'node:process'
+import { ws } from './ws'
 
-import 'dotenv/config'
+function syncComments() {
+  ws.send([
+    {
+      id: './app.vue',
+      type: 'line',
+      original: '',
+      start: 0,
+      end: 0,
+      line: 1,
+    },
+  ])
+}
 
-export const BASE_URL = `http://${process.env.HOST}:${process.env.NITRO_PORT}/_todos/ws`
-
-export const rpc = {}
+export const rpc = {
+  syncComments,
+}

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "consola": "^3.2.3",
+    "destr": "^2.0.3",
     "hookable": "^5.5.3",
     "nuxt": "^3.10.3",
     "valibot": "^0.30.0",
