@@ -2,10 +2,6 @@
 export default defineNuxtConfig({
   devtools: { enabled: false },
 
-  app: {
-    baseURL: '/_todos',
-  },
-
   nitro: {
     output: {
       dir: '../../dist',
