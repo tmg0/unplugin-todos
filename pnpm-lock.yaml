@@ -23,6 +23,12 @@ importers:
       defu:
         specifier: ^6.1.4
         version: 6.1.4
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
+      execa:
+        specifier: ^8.0.1
+        version: 8.0.1
       magic-string:
         specifier: ^0.30.8
         version: 0.30.8
@@ -32,6 +38,9 @@ importers:
       pathe:
         specifier: ^1.1.2
         version: 1.1.2
+      std-env:
+        specifier: ^3.7.0
+        version: 3.7.0
       unplugin:
         specifier: ^1.8.0
         version: 1.8.0

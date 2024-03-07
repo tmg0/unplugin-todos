@@ -1,4 +1,5 @@
 import type MagicString from 'magic-string'
+import { execa } from 'execa'
 import { version } from '../package.json'
 import type { Comment, TodosContext, TodosOptions } from './types'
 import { resolveCommenets } from './resolvers'
@@ -29,7 +30,7 @@ export function createInternalContext(options: TodosOptions): TodosContext {
   }
 
   async function runServer() {
-
+    await execa('node', ['-r', 'dotenv/config', 'server/index.mjs'], { stdio: 'inherit' })
   }
 
   return {
