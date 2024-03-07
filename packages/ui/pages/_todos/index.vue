@@ -2,7 +2,12 @@
 import { useWebSocket } from '@vueuse/core'
 
 const { status, data } = useWebSocket('ws://localhost:3000/api/ws', {
-  autoReconnect: false,
+  autoReconnect: true,
+  heartbeat: {
+    message: 'ping',
+    interval: 1000,
+    pongTimeout: 1000,
+  },
 })
 </script>
 
