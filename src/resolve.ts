@@ -2,7 +2,7 @@ import type MagicString from 'magic-string'
 import { defu } from 'defu'
 import { getMagicString, isHTML, isJavascript, isVue } from './utils'
 import type { Comment } from './types'
-import { h5CommentRE } from './regexp'
+import { h5CommentRE, linefeedRE } from './regexp'
 import { parseVueSFC } from './vue'
 import { detectJavascript } from './detect'
 import { DEFAULT_RESOLVE_COMMENT_OPTIONS } from './constants'
@@ -28,13 +28,16 @@ export function resolveJavascriptComments(code: string | MagicString, id: string
       original: comment.value.trim(),
       start: (comment.start ?? 0) + options.offsetChar,
       end: (comment.end ?? 0) + options.offsetChar,
-      line: (comment.loc.start.line ?? 0) + options.offsetLine,
+      line: (comment.loc?.start.line ?? 0) + options.offsetLine,
     })
   })
   return comments
 }
 
 export function resolveHTMLComments(code: string | MagicString, id: string, rawOptions?: Partial<ResolveCommentOptions>): Comment[] {
+  if (!code)
+    return []
+
   const options = resolveOptions(rawOptions)
   const comments: Comment[] = []
   const s = getMagicString(code)
@@ -43,12 +46,15 @@ export function resolveHTMLComments(code: string | MagicString, id: string, rawO
   let match = h5CommentRE.exec(original)
 
   while (match) {
+    const lf = s.original.slice(0, match.index).match(linefeedRE)?.length ?? 0
+
     comments.push({
       id,
       type: 'block',
       original: match[1].trim(),
       start: match.index + options.offsetChar,
       end: match.index + match[1].length + options.offsetChar,
+      line: lf + 1 + options.offsetLine,
     })
 
     match = h5CommentRE.exec(original)
