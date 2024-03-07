@@ -36,6 +36,7 @@
   "scripts": {
     "dev": "vitest dev",
     "build": "unbuild",
+    "dev:ui": "cd packages/ui && pnpm dev",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest"
