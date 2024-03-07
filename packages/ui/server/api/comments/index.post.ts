@@ -1,8 +1,7 @@
 import type { Input } from 'valibot'
-import { array, number, object, string } from 'valibot'
-import { useGlobalStore } from '~/stores/global'
+import { array, number, object, parse, string } from 'valibot'
 
-const schema = array(object({
+const Schema = array(object({
   id: string(),
   type: string(),
   original: string(),
@@ -11,11 +10,10 @@ const schema = array(object({
   line: number(),
 }))
 
-type Body = Input<typeof schema>
+type Body = Input<typeof Schema>
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody<Body>(event)
-  const store = useGlobalStore()
-  store.syncComments(body)
+  const rawBody = await readBody<Body>(event)
+  const body = parse(Schema, rawBody)
   return body
 })

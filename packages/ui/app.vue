@@ -1,5 +1,8 @@
+<script setup lang="ts">
+</script>
+
 <template>
   <div>
-    <NuxtWelcome />
+    unplugin-todos
   </div>
 </template>
