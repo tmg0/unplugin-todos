@@ -39,6 +39,7 @@
     "build": "pnpm build:ui && unbuild",
     "dev:ui": "cd packages/ui && pnpm dev",
     "build:ui": "cd packages/ui && pnpm build",
+    "play:tsup": "cd playground/tsup && pnpm dev",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest"

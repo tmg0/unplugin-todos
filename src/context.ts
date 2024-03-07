@@ -1,5 +1,6 @@
 import type MagicString from 'magic-string'
 import { execa } from 'execa'
+import { dirname, relative } from 'pathe'
 import { version } from '../package.json'
 import type { Comment, TodosContext, TodosOptions } from './types'
 import { resolveCommenets } from './resolvers'
@@ -12,7 +13,7 @@ export function createTodos(options: TodosOptions) {
   }
 
   async function init() {
-    await ctx.runServer()
+    await ctx.runUI()
   }
 
   return {
@@ -29,14 +30,15 @@ export function createInternalContext(options: TodosOptions): TodosContext {
     return _map
   }
 
-  async function runServer() {
-    await execa('node', ['-r', 'dotenv/config', 'server/index.mjs'], { stdio: 'inherit' })
+  async function runUI() {
+    const endpoint = 'node_modules/unplugin-todos/dist/server/index.mjs'
+    await execa('node', ['-r', 'dotenv/config', endpoint], { stdio: 'inherit' })
   }
 
   return {
     version,
     options,
-    runServer,
+    runUI,
     updateComments,
     getCommentMap,
   }

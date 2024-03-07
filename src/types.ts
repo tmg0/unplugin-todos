@@ -37,7 +37,7 @@ export interface TodosContext {
   version: string
   options: TodosOptions
 
-  runServer: () => Promise<void>
+  runUI: () => Promise<void>
   updateComments: (code: string | MagicString, id: string, ctx: TodosContext) => void
   getCommentMap: () => Record<string, Comment>
 }

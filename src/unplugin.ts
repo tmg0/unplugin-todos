@@ -27,14 +27,13 @@ const unplugin = createUnplugin<Partial<TodosOptions>>((rawOptions = {}) => {
     transformInclude(id) {
       return filter(id)
     },
-    transform(code) {
+    transform(code, id) {
       if (!options.dev)
         return
 
       const s = new MagicString(code)
 
-      if (!s.hasChanged())
-        return
+      ctx.updateComments(code, id)
 
       return {
         code: s.toString(),
