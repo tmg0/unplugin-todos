@@ -35,8 +35,9 @@
   ],
   "scripts": {
     "dev": "vitest dev",
-    "build": "unbuild",
+    "build": "pnpm build:ui && unbuild",
     "dev:ui": "cd packages/ui && pnpm dev",
+    "build:ui": "cd packages/ui && pnpm build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest"
