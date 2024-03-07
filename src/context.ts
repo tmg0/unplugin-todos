@@ -11,8 +11,8 @@ export function createTodos(options: TodosOptions) {
     return ctx.updateComments(code, id, ctx)
   }
 
-  function init() {
-    return ctx.runServer()
+  async function init() {
+    await ctx.runServer()
   }
 
   return {
