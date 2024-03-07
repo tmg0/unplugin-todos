@@ -10,5 +10,9 @@ export default defineNuxtConfig({
     output: {
       dir: '../../dist',
     },
+
+    experimental: {
+      websocket: true,
+    },
   },
 })

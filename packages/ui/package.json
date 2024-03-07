@@ -10,6 +10,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "consola": "^3.2.3",
+    "hookable": "^5.5.3",
     "nuxt": "^3.10.3",
     "valibot": "^0.30.0",
     "vue": "^3.4.19",
