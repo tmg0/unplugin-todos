@@ -5,7 +5,7 @@ import 'dotenv/config'
 
 const BASE_URL = `http://${process.env.HOST}:${process.env.NITRO_PORT}`
 
-function createComment(body: any) {
+function createComments(body: any) {
   return ofetch('/api/comments', {
     baseURL: BASE_URL,
     method: 'POST',
@@ -14,5 +14,5 @@ function createComment(body: any) {
 }
 
 export const rpc = {
-  createComment,
+  createComments,
 }

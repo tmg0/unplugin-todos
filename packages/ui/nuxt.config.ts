@@ -4,9 +4,15 @@ export default defineNuxtConfig({
     baseURL: '/_todos',
   },
 
+  modules: ['@pinia/nuxt'],
+
   nitro: {
     output: {
       dir: '../../dist',
     },
+  },
+
+  pinia: {
+    storesDirs: ['./stores/**'],
   },
 })
