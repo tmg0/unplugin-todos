@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "description": "",
   "author": "tmg0 <zekun.jin@foxmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "homepage": "https://github.com/tmg0/unplugin-todos#readme",
   "repository": {
     "type": "git",
