@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { useWebSocket } from '@vueuse/core'
+import { destr } from 'destr'
+
+const comments = ref<any[]>([])
 
 const { status, data } = useWebSocket('ws://localhost:3000/api/ws', {
   autoReconnect: {
@@ -12,6 +15,16 @@ const { status, data } = useWebSocket('ws://localhost:3000/api/ws', {
     pongTimeout: 1000,
   },
 })
+
+watch(data, (value) => {
+  const json = destr<any>(value)
+
+  if (status.value !== 'OPEN')
+    return
+
+  if (json.type === 'put:comments')
+    comments.value = json.data
+})
 </script>
 
 <template>
@@ -20,7 +33,6 @@ const { status, data } = useWebSocket('ws://localhost:3000/api/ws', {
       unplugin-todos
     </div>
 
-    {{ status }}
-    {{ data }}
+    {{ comments }}
   </div>
 </template>
