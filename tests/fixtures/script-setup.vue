@@ -7,7 +7,7 @@
  * Some feature actions.
  */
 
-// TODO: Comment with single line.
+// TODO: Comment with inline
 
 /**
  * TOTO: Comment block.

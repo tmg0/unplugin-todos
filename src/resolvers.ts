@@ -26,7 +26,7 @@ export function resolveJavascriptComments(code: string | MagicString, id: string
   ast.comments?.forEach((comment) => {
     comments.push({
       id,
-      type: comment.type === 'CommentBlock' ? 'block' : 'line',
+      type: comment.type === 'CommentBlock' ? 'block' : 'inline',
       original: comment.value.trim(),
       start: (comment.start ?? 0) + options.offsetChar,
       end: (comment.end ?? 0) + options.offsetChar,

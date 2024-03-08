@@ -27,7 +27,7 @@ export type JsAST = ReturnType<typeof parse>
 
 export interface Comment {
   id: string
-  type: 'line' | 'block'
+  type: 'inline' | 'block'
   original: string
   start: number
   end: number
