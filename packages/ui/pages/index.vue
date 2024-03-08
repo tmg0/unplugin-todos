@@ -22,13 +22,11 @@ watch(data, (value) => {
   if (status.value !== 'OPEN')
     return
 
+  if (json.type === 'connected')
+    send(JSON.stringify({ type: 'get:comments' }))
+
   if (json.type === 'put:comments')
     comments.value = json.data
-})
-
-watch(status, (value) => {
-  if (value === 'OPEN')
-    send(JSON.stringify({ type: 'get:comments' }))
 })
 </script>
 

@@ -28,5 +28,8 @@ export default defineWebSocketHandler({
 
     if (method === 'put')
       peer.publish('channel', defineResponse(`put:${domain}` as Message['type'], response.data))
+
+    if (method === 'get')
+      peer.publish('channel', defineResponse(`get:${domain}` as Message['type']))
   },
 })

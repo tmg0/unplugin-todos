@@ -1,6 +1,7 @@
 import type { parse } from '@babel/parser'
 import type { FilterPattern } from '@rollup/pluginutils'
 import type MagicString from 'magic-string'
+import type WebSocket from 'ws'
 
 export interface TodosOptions {
   dev: boolean
@@ -33,11 +34,27 @@ export interface Comment {
   line: number
 }
 
+export interface Message {
+  type: 'ping' | 'pong' | 'connected' | 'put:comments' | 'get:comments'
+  data?: any
+}
+
+export interface WS {
+  ws: WebSocket | undefined
+  connect: () => Promise<void>
+  close: () => void
+  ping: () => void
+  put: (domain: 'comments', data: any) => void
+  onReceived: (cb: (message: Message) => void) => void
+}
+
 export interface TodosContext {
   version: string
   options: TodosOptions
+  ws: Promise<WS>
 
   runUI: () => Promise<void>
   updateComments: (code: string | MagicString, id: string, ctx: TodosContext) => void
   getCommentMap: () => Record<string, Comment>
+  getComments: () => Comment[]
 }
