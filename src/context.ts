@@ -39,20 +39,19 @@ export function createInternalContext(options: TodosOptions): TodosContext {
     return _c
   }
 
-  async function runUI() {
+  async function runUI(): Promise<void> {
     const endpoint = 'node_modules/unplugin-todos/dist/server/index.mjs'
-    await execa('node', ['-r', 'dotenv/config', endpoint], { stdio: 'inherit' })
+    execa('node', ['-r', 'dotenv/config', endpoint])
+    return new Promise((resolve) => {
+      setTimeout(() => { resolve() }, 1000)
+    })
   }
 
   async function createConnecton() {
     ws = await createWebsocket(BASE_URL, {
-      onConnected({ put }) {
-        put('comments', getComments())
-      },
-
-      onReceived({ put }, message) {
+      onReceived(_, message) {
         if (message.type === 'get:comments')
-          put('comments', getComments())
+          getComments()
       },
     })
 

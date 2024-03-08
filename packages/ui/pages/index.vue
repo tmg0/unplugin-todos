@@ -23,11 +23,13 @@ watch(data, (value) => {
     return
 
   if (json.type === 'connected')
-    send(JSON.stringify({ type: 'get:comments' }))
+    refresh()
 
   if (json.type === 'put:comments')
     comments.value = json.data
 })
+
+const refresh = () => { send(JSON.stringify({ type: 'get:comments' })) }
 </script>
 
 <template>
@@ -36,6 +38,10 @@ watch(data, (value) => {
       unplugin-todos
     </div>
 
-    {{ comments }}
+    <div v-for="comment in comments" :key="`${comment.id}:${comment.line}`">
+      <a :href="`vscode://file/${comment.id}:${comment.line}`">{{ comment.type }}: {{ comment.original }}</a>
+    </div>
+
+    <button @click="refresh">refresh</button>
   </div>
 </template>
