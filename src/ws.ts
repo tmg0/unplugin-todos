@@ -8,6 +8,7 @@ export const BASE_URL = `ws://localhost:3000/api/ws`
 
 interface CreateWebsocketOptions {
   immediate: boolean
+  onConnected?: (ws: WS) => void
   onReceived?: (ws: WS, message: Message) => void
 }
 
@@ -21,6 +22,15 @@ export async function createWebsocket(url: string, rawOptions: Partial<CreateWeb
   const _cbs: ((message: Message) => void)[] = []
   const options = resolveOptions(rawOptions)
 
+  const r = {
+    ws,
+    connect,
+    close,
+    ping,
+    put,
+    onReceived,
+  }
+
   async function connect(): Promise<void> {
     if (ws)
       close()
@@ -33,7 +43,11 @@ export async function createWebsocket(url: string, rawOptions: Partial<CreateWeb
     })
 
     return new Promise((resolve, reject) => {
-      ws!.on('open', resolve)
+      ws!.on('open', (event: any) => {
+        options.onConnected?.(r)
+        resolve(event)
+      })
+
       ws!.on('error', reject)
     })
   }
@@ -52,15 +66,6 @@ export async function createWebsocket(url: string, rawOptions: Partial<CreateWeb
 
   function put(domain: 'comments', data: any) {
     ws?.send(defineRequest(`put:${domain}`, data))
-  }
-
-  const r = {
-    ws,
-    connect,
-    close,
-    ping,
-    put,
-    onReceived,
   }
 
   if (options.onReceived)

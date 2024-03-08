@@ -51,9 +51,9 @@ export interface WS {
 export interface TodosContext {
   version: string
   options: TodosOptions
-  ws: Promise<WS>
 
   runUI: () => Promise<void>
+  createConnecton: () => Promise<WS>
   updateComments: (code: string | MagicString, id: string, ctx: TodosContext) => void
   getCommentMap: () => Record<string, Comment>
   getComments: () => Comment[]
