@@ -3,7 +3,6 @@ import { execa } from 'execa'
 import { version } from '../package.json'
 import type { Comment, TodosContext, TodosOptions } from './types'
 import { resolveCommenets } from './resolvers'
-import { setupWS } from './ws'
 import { rpc } from './rpc'
 
 export function createTodos(options: TodosOptions) {
@@ -34,7 +33,6 @@ export function createInternalContext(options: TodosOptions): TodosContext {
   async function runUI() {
     const endpoint = 'node_modules/unplugin-todos/dist/server/index.mjs'
     await execa('node', ['-r', 'dotenv/config', endpoint], { stdio: 'inherit' })
-    await setupWS()
   }
 
   return {

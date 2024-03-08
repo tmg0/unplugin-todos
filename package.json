@@ -50,17 +50,20 @@
     "@vue/compiler-sfc": "^3.4.21",
     "acorn": "^8.11.3",
     "defu": "^6.1.4",
+    "destr": "^2.0.3",
     "dotenv": "^16.4.5",
     "execa": "^8.0.1",
     "magic-string": "^0.30.8",
     "mlly": "^1.6.1",
     "pathe": "^1.1.2",
     "std-env": "^3.7.0",
-    "unplugin": "^1.8.0"
+    "unplugin": "^1.8.0",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.8.0",
     "@types/node": "^20.11.25",
+    "@types/ws": "^8.5.10",
     "eslint": "^8.57.0",
     "typescript": "^5.3.3",
     "unbuild": "^2.0.0",

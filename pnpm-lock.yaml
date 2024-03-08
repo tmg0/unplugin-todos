@@ -23,6 +23,9 @@ importers:
       defu:
         specifier: ^6.1.4
         version: 6.1.4
+      destr:
+        specifier: ^2.0.3
+        version: 2.0.3
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -44,6 +47,9 @@ importers:
       unplugin:
         specifier: ^1.8.0
         version: 1.8.0
+      ws:
+        specifier: ^8.16.0
+        version: 8.16.0
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^2.8.0
@@ -51,6 +57,9 @@ importers:
       '@types/node':
         specifier: ^20.11.25
         version: 20.11.25
+      '@types/ws':
+        specifier: ^8.5.10
+        version: 8.5.10
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -2240,6 +2249,12 @@ packages:
   /@types/web-bluetooth@0.0.20:
     resolution: {integrity: sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow==}
     dev: false
+
+  /@types/ws@8.5.10:
+    resolution: {integrity: sha512-vmQSUcfalpIq0R9q7uTo2lXs6eGIpt9wtnLdMv9LVpIjCA/+ufZRozlVoVelIYixx1ugCBKDhn89vnsEGOCx9A==}
+    dependencies:
+      '@types/node': 20.11.25
+    dev: true
 
   /@typescript-eslint/eslint-plugin@7.1.1(@typescript-eslint/parser@7.1.1)(eslint@8.57.0)(typescript@5.3.3):
     resolution: {integrity: sha512-zioDz623d0RHNhvx0eesUmGfIjzrk18nSBC8xewepKXbBvN/7c1qImV7Hg8TI1URTxKax7/zxfxj3Uph8Chcuw==}

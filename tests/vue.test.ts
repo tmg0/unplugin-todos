@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from 'vitest'
 import { basename } from 'pathe'
-import { resolveVueComments } from '../src/resolve'
+import { resolveVueComments } from '../src/resolvers'
 
 const fixtures = import.meta.glob('./fixtures/*.vue', { as: 'raw', eager: true })
 

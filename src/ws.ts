@@ -1,38 +1,67 @@
 import process from 'node:process'
-
+import WebSocket from 'ws'
+import { defu } from 'defu'
+import { destr } from 'destr'
 import 'dotenv/config'
 
-export const BASE_URL = `http://${process.env.HOST}:${process.env.NITRO_PORT}/_todos/api/ws`
-
-let _ws: WebSocket
-
-async function connect() {
-  if (_ws)
-    _ws.close()
-
-  _ws = new WebSocket(BASE_URL)
-
-  _ws.addEventListener('message', () => {
-    // TODO: Status flow actions
-  })
-
-  await new Promise(resolve => _ws!.addEventListener('open', resolve))
+interface Message {
+  type: 'ping' | 'pong' | 'connected'
+  data?: any
 }
 
-function send(data: any) {
-  _ws!.send(data)
+export const BASE_URL = `ws://localhost:${process.env.NITRO_PORT ?? 3000}/api/ws`
+
+interface CreateWebsocketOptions {
+  immediate: boolean
 }
 
-function ping() {
-  _ws!.send('ping')
-}
+const decodeMessage = (message: string) => destr<Message>(message)
+const defineRequest = (type: Message['type'], data?: any): string => JSON.stringify({ type, data })
 
-export const ws = {
-  connect,
-  send,
-  ping,
-}
+const resolveOptions = (options: Partial<CreateWebsocketOptions> = {}) => defu(options, { immediate: true }) as CreateWebsocketOptions
 
-export function setupWS() {
-  return ws.connect()
+export async function createWebsocket(url: string, rawOptions?: CreateWebsocketOptions) {
+  let ws: WebSocket | undefined
+  let _cb: ((message: Message) => void) | undefined
+  const options = resolveOptions(rawOptions)
+
+  async function connect(): Promise<void> {
+    if (ws)
+      close()
+
+    ws = new WebSocket(url)
+
+    ws.on('message', (data) => {
+      const message = decodeMessage(data.toString())
+      _cb?.(message)
+    })
+
+    return new Promise((resolve, reject) => {
+      ws!.on('open', resolve)
+      ws!.on('error', reject)
+    })
+  }
+
+  function close() {
+    ws?.close()
+  }
+
+  function onReceived(cb: (message: Message) => void) {
+    _cb = cb
+  }
+
+  function ping() {
+    ws?.send(defineRequest('ping'))
+  }
+
+  if (options.immediate)
+    await connect()
+
+  return {
+    ws,
+    connect,
+    close,
+    ping,
+    onReceived,
+  }
 }
