@@ -5,7 +5,7 @@ import { destr } from 'destr'
 import 'dotenv/config'
 
 interface Message {
-  type: 'ping' | 'pong' | 'connected'
+  type: 'ping' | 'pong' | 'connected' | 'put:comments'
   data?: any
 }
 
@@ -54,6 +54,10 @@ export async function createWebsocket(url: string, rawOptions?: CreateWebsocketO
     ws?.send(defineRequest('ping'))
   }
 
+  function put(domain: 'comments', data: any) {
+    ws?.send(defineRequest(`put:${domain}`, data))
+  }
+
   if (options.immediate)
     await connect()
 
@@ -62,6 +66,7 @@ export async function createWebsocket(url: string, rawOptions?: CreateWebsocketO
     connect,
     close,
     ping,
+    put,
     onReceived,
   }
 }
