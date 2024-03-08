@@ -4,7 +4,7 @@ import { destr } from 'destr'
 
 const comments = ref<any[]>([])
 
-const { status, data } = useWebSocket('ws://localhost:3000/api/ws', {
+const { status, data, send } = useWebSocket('ws://localhost:3000/api/ws', {
   autoReconnect: {
     retries: 3,
     delay: 5 * 1000,
@@ -24,6 +24,11 @@ watch(data, (value) => {
 
   if (json.type === 'put:comments')
     comments.value = json.data
+})
+
+watch(status, (value) => {
+  if (value === 'OPEN')
+    send(JSON.stringify({ type: 'get:comments' }))
 })
 </script>
 
