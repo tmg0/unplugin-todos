@@ -85,8 +85,8 @@ export function createInternalContext(options: TodosOptions): TodosContext {
     await until(() => checkPort(port), false)
   }
 
-  async function createConnecton() {
-    const baseURL = await getServerBaseURL(ctx)
+  async function createConnecton(baseURL?: string) {
+    baseURL = baseURL ?? await getServerBaseURL(ctx)
     ws = await createWebsocket(baseURL, {
       onReceived(_, message) {
         if (message.type === 'get:comments')

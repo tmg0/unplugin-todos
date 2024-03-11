@@ -1,10 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { createWebsocket, getServerBaseURL } from '../src/ws'
-import { createInternalContext } from '../src/context'
 
 describe('websocket', async () => {
-  const ctx = createInternalContext({} as any)
-  const baseURL = await getServerBaseURL(ctx)
+  const baseURL = await getServerBaseURL({ getServerPort: () => 3000 } as any)
   const { ping, onReceived } = await createWebsocket(baseURL)
 
   it('connect', async () => {

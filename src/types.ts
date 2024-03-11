@@ -53,7 +53,7 @@ export interface TodosContext {
   options: TodosOptions
 
   runUI: () => Promise<void>
-  createConnecton: () => Promise<WS>
+  createConnecton: (baseURL?: string) => Promise<WS>
   updateComments: (code: string | MagicString, id: string, ctx: TodosContext) => void
   getCommentMap: () => Record<string, Comment>
   getComments: () => Comment[]
