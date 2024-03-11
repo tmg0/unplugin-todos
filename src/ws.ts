@@ -1,10 +1,8 @@
 import WebSocket from 'ws'
 import { defu } from 'defu'
 import { destr } from 'destr'
-import type { Message, WS } from './types'
+import type { Message, TodosContext, WS } from './types'
 import 'dotenv/config'
-
-export const BASE_URL = `ws://localhost:3000/api/ws`
 
 interface CreateWebsocketOptions {
   immediate: boolean
@@ -16,6 +14,11 @@ const decodeMessage = (message: string) => destr<Message>(message)
 const defineRequest = (type: Message['type'], data?: any): string => JSON.stringify({ type, data })
 
 const resolveOptions = (options: Partial<CreateWebsocketOptions> = {}) => defu(options, { immediate: true }) as CreateWebsocketOptions
+
+export async function getServerBaseURL(ctx: TodosContext) {
+  const port = await ctx.getServerPort()
+  return `ws://localhost:${port}/api/ws`
+}
 
 export async function createWebsocket(url: string, rawOptions: Partial<CreateWebsocketOptions> = {}): Promise<WS> {
   let ws: WebSocket | undefined
