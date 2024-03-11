@@ -27,13 +27,13 @@ export function resolveJavascriptComments(code: string | MagicString, id: string
     comments.push({
       id,
       type: comment.type === 'CommentBlock' ? 'block' : 'inline',
-      original: comment.value.trim(),
+      original: comment.value,
       start: (comment.start ?? 0) + options.offsetChar,
       end: (comment.end ?? 0) + options.offsetChar,
       line: (comment.loc?.start.line ?? 0) + options.offsetLine,
     })
   })
-  return comments
+  return comments.map(normalizeComment)
 }
 
 export function resolveHTMLComments(code: string | MagicString, id: string, rawOptions?: Partial<ResolveCommentOptions>): Comment[] {
@@ -53,7 +53,7 @@ export function resolveHTMLComments(code: string | MagicString, id: string, rawO
     comments.push({
       id,
       type: 'block',
-      original: match[1].trim(),
+      original: match[1],
       start: match.index + options.offsetChar,
       end: match.index + match[1].length + options.offsetChar,
       line: lf + 1 + options.offsetLine,
@@ -64,7 +64,7 @@ export function resolveHTMLComments(code: string | MagicString, id: string, rawO
 
   h5CommentRE.lastIndex = 0
 
-  return comments
+  return comments.map(normalizeComment)
 }
 
 export function resolveVueComments(code: string | MagicString, id: string): Comment[] {
@@ -91,5 +91,19 @@ export function resolveVscodeURL(comment: Comment, ctx: TodosContext) {
 
   return {
     url: `vscode://file/${filepath}:${comment.line}`,
+  }
+}
+
+export function normalizeComment(comment: Comment): Comment {
+  const { original } = comment
+  if (comment.type === 'inline')
+    return { ...comment, original: original.trim() }
+
+  return {
+    ...comment,
+    original: (() => {
+      const lines = original.split('\r\n').map(line => line.trim().replace(/^\s*\*+|\*+\s*$/g, '').trim())
+      return lines.join('\n')
+    })(),
   }
 }
