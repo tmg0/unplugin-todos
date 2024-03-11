@@ -4,8 +4,8 @@ const items = [{ label: 'All' }, { label: 'Board' }, { label: 'Upcoming' }]
 const { comments, refresh } = useComments()
 
 const columns = [
-  { key: 'type', label: 'Type' },
   { key: 'original', label: 'Task name' },
+  { key: 'type', label: 'Type' },
 ]
 </script>
 
