@@ -1,9 +1,11 @@
 import type MagicString from 'magic-string'
 import { execa } from 'execa'
+import { checkPort } from 'get-port-please'
 import { version } from '../package.json'
 import type { Comment, TodosContext, TodosOptions, WS } from './types'
 import { resolveCommenets } from './resolvers'
 import { BASE_URL, createWebsocket } from './ws'
+import { until } from './utils'
 
 export function createTodos(options: TodosOptions) {
   const ctx = createInternalContext(options)
@@ -42,9 +44,7 @@ export function createInternalContext(options: TodosOptions): TodosContext {
   async function runUI(): Promise<void> {
     const endpoint = 'node_modules/unplugin-todos/dist/server/index.mjs'
     execa('node', ['-r', 'dotenv/config', endpoint])
-    return new Promise((resolve) => {
-      setTimeout(() => { resolve() }, 1000)
-    })
+    await until(() => checkPort(3000))
   }
 
   async function createConnecton() {
