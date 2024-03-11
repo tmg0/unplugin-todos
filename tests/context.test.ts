@@ -5,7 +5,7 @@ import { createInternalContext } from '../src/context'
 import vueScriptSetup from './fixtures/script-setup.vue?raw'
 
 describe('context', () => {
-  it('init', async () => {
+  it('setup', async () => {
     const ctx = createInternalContext({} as any)
     await ctx.createConnecton('ws://localhost:3000/api/ws')
     ctx.updateComments(vueScriptSetup, './fixtures/script-setup.vue', ctx)

@@ -42,7 +42,7 @@ const unplugin = createUnplugin<Partial<TodosOptions> | undefined>((rawOptions =
     },
     async buildStart() {
       if (options.dev)
-        await ctx.init()
+        await ctx.setup()
     },
   }
 })

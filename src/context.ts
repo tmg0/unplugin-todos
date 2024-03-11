@@ -21,13 +21,13 @@ export function createTodos(options: TodosOptions) {
     return ctx.updateComments(code, id, ctx)
   }
 
-  async function init() {
+  async function setup() {
     await ctx.runUI()
     await ctx.createConnecton()
   }
 
   return {
-    init,
+    setup,
     updateComments: updateCommentsWithContext,
     getCommentMap: ctx.getCommentMap,
     getComments: ctx.getComments,
@@ -37,6 +37,7 @@ export function createTodos(options: TodosOptions) {
 export function createInternalContext(options: TodosOptions): TodosContext {
   let ws: WS | undefined
   let port: number | undefined
+  let isRunning = false
   const _map: Record<string, Comment> = {}
 
   const ctx = {
@@ -77,12 +78,15 @@ export function createInternalContext(options: TodosOptions): TodosContext {
   }
 
   async function runUI(): Promise<void> {
+    if (isRunning)
+      return
     const endpoint = join(UNPLUGIN_TODOS_DIR, 'dist/server/index.mjs')
     const port = await getServerPort()
     await fse.ensureFile(UNPLUGIN_TODOS_ENV)
     write({ PORT: port }, { name: '.env', flat: true, dir: UNPLUGIN_TODOS_DIR })
     execa('node', ['-r', 'dotenv/config', endpoint], { cwd: UNPLUGIN_TODOS_DIR, stdio: 'inherit' })
     await until(() => checkPort(port), false)
+    isRunning = true
   }
 
   async function createConnecton(baseURL?: string) {
