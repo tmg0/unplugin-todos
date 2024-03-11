@@ -4,7 +4,7 @@ import { destr } from 'destr'
 
 const comments = ref<any[]>([])
 
-const { status, data, send } = useWebSocket('ws://localhost:3000/api/ws', {
+const { status, data, send } = useWebSocket(`ws://${location.host}/api/ws`, {
   autoReconnect: {
     retries: 3,
     delay: 5 * 1000,
@@ -29,7 +29,9 @@ watch(data, (value) => {
     comments.value = json.data
 })
 
-const refresh = () => { send(JSON.stringify({ type: 'get:comments' })) }
+function refresh() {
+  send(JSON.stringify({ type: 'get:comments' }))
+}
 </script>
 
 <template>
@@ -42,6 +44,8 @@ const refresh = () => { send(JSON.stringify({ type: 'get:comments' })) }
       <a :href="`vscode://file/${comment.id}:${comment.line}`">{{ comment.type }}: {{ comment.original }}</a>
     </div>
 
-    <button @click="refresh">refresh</button>
+    <button @click="refresh">
+      refresh
+    </button>
   </div>
 </template>

@@ -1,8 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { BASE_URL, createWebsocket } from '../src/ws'
+import { createWebsocket, getServerBaseURL } from '../src/ws'
+import { createInternalContext } from '../src/context'
 
 describe('websocket', async () => {
-  const { ping, onReceived } = await createWebsocket(BASE_URL)
+  const ctx = createInternalContext({} as any)
+  const baseURL = await getServerBaseURL(ctx)
+  const { ping, onReceived } = await createWebsocket(baseURL)
 
   it('connect', async () => {
     expect(true).toBe(true)

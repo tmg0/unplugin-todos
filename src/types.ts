@@ -57,4 +57,5 @@ export interface TodosContext {
   updateComments: (code: string | MagicString, id: string, ctx: TodosContext) => void
   getCommentMap: () => Record<string, Comment>
   getComments: () => Comment[]
+  getServerPort: () => Promise<number>
 }

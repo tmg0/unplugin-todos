@@ -1,9 +1,18 @@
+import { join } from 'node:path'
+import process from 'node:process'
 import type MagicString from 'magic-string'
 import { execa } from 'execa'
+import fse from 'fs-extra'
+import { checkPort, getRandomPort } from 'get-port-please'
+import { read, write } from 'rc9'
 import { version } from '../package.json'
 import type { Comment, TodosContext, TodosOptions, WS } from './types'
 import { resolveCommenets } from './resolvers'
-import { BASE_URL, createWebsocket } from './ws'
+import { createWebsocket, getServerBaseURL } from './ws'
+import { until } from './utils'
+
+const UNPLUGIN_TODOS_DIR = join(process.cwd(), 'node_modules/unplugin-todos')
+const UNPLUGIN_TODOS_ENV = join(UNPLUGIN_TODOS_DIR, '.env')
 
 export function createTodos(options: TodosOptions) {
   const ctx = createInternalContext(options)
@@ -27,7 +36,19 @@ export function createTodos(options: TodosOptions) {
 
 export function createInternalContext(options: TodosOptions): TodosContext {
   let ws: WS | undefined
+  let port: number | undefined
   const _map: Record<string, Comment> = {}
+
+  const ctx = {
+    version,
+    options,
+    runUI,
+    createConnecton,
+    updateComments,
+    getCommentMap,
+    getComments,
+    getServerPort,
+  }
 
   function getCommentMap() {
     return _map
@@ -39,16 +60,34 @@ export function createInternalContext(options: TodosOptions): TodosContext {
     return _c
   }
 
+  async function getServerPort() {
+    if (port)
+      return port
+
+    port = read({ name: '.env', dir: UNPLUGIN_TODOS_DIR })?.PORT
+    port = port ? Number(port) : undefined
+    if (!port)
+      port = await getRandomPort()
+    else if (await checkPort(port))
+      return port
+    else
+      port = await getRandomPort()
+
+    return port
+  }
+
   async function runUI(): Promise<void> {
-    const endpoint = 'node_modules/unplugin-todos/dist/server/index.mjs'
-    execa('node', ['-r', 'dotenv/config', endpoint])
-    return new Promise((resolve) => {
-      setTimeout(() => { resolve() }, 1000)
-    })
+    const endpoint = join(UNPLUGIN_TODOS_DIR, 'dist/server/index.mjs')
+    const port = await getServerPort()
+    await fse.ensureFile(UNPLUGIN_TODOS_ENV)
+    write({ PORT: port }, { name: '.env', flat: true, dir: UNPLUGIN_TODOS_DIR })
+    execa('node', ['-r', 'dotenv/config', endpoint], { cwd: UNPLUGIN_TODOS_DIR, stdio: 'inherit' })
+    await until(() => checkPort(port), false)
   }
 
   async function createConnecton() {
-    ws = await createWebsocket(BASE_URL, {
+    const baseURL = await getServerBaseURL(ctx)
+    ws = await createWebsocket(baseURL, {
       onReceived(_, message) {
         if (message.type === 'get:comments')
           getComments()
@@ -58,15 +97,7 @@ export function createInternalContext(options: TodosOptions): TodosContext {
     return ws
   }
 
-  return {
-    version,
-    options,
-    runUI,
-    createConnecton,
-    updateComments,
-    getCommentMap,
-    getComments,
-  }
+  return ctx
 }
 
 function updateComments(code: string | MagicString, id: string, ctx: TodosContext) {
