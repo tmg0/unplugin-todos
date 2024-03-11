@@ -10,7 +10,7 @@ export const defaultExcludes = [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/]
 
 const toArray = <T>(x: T | T[] | undefined | null): T[] => x == null ? [] : Array.isArray(x) ? x : [x]
 
-const unplugin = createUnplugin<Partial<TodosOptions>>((rawOptions = {}) => {
+const unplugin = createUnplugin<Partial<TodosOptions> | undefined>((rawOptions = {}) => {
   const options = resolveOptions(rawOptions)
   const ctx = createTodos(options)
 
