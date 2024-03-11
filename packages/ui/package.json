@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/ui": "^2.14.2",
     "@vueuse/core": "^10.9.0",
     "consola": "^3.2.3",
     "nitropack": "npm:nitropack-nightly@latest",

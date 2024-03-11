@@ -1,51 +1,40 @@
 <script setup lang="ts">
-import { useWebSocket } from '@vueuse/core'
-import { destr } from 'destr'
+const items = [{ label: 'All' }, { label: 'Board' }, { label: 'Upcoming' }]
 
-const comments = ref<any[]>([])
+const { comments, refresh } = useComments()
 
-const { status, data, send } = useWebSocket(`ws://${location.host}/api/ws`, {
-  autoReconnect: {
-    retries: 3,
-    delay: 5 * 1000,
-  },
-  heartbeat: {
-    message: JSON.stringify({ type: 'ping' }),
-    interval: 5 * 1000,
-    pongTimeout: 1000,
-  },
-})
-
-watch(data, (value) => {
-  const json = destr<any>(value)
-
-  if (status.value !== 'OPEN')
-    return
-
-  if (json.type === 'connected')
-    refresh()
-
-  if (json.type === 'put:comments')
-    comments.value = json.data
-})
-
-function refresh() {
-  send(JSON.stringify({ type: 'get:comments' }))
-}
+const columns = [
+  { key: 'type', label: 'Type' },
+  { key: 'original', label: 'Task name' },
+]
 </script>
 
 <template>
   <div>
-    <div>
-      unplugin-todos
+    <div class="w-full flex items-center justify-between">
+      <div class="text-4xl font-bold flex gap-4">
+        <span>🚧</span>
+        <span>Daily Tasks</span>
+      </div>
+
+      <UButton
+        icon="i-heroicons-arrow-path"
+        color="gray"
+        variant="link"
+        @click="refresh"
+      />
     </div>
 
-    <div v-for="comment in comments" :key="`${comment.id}:${comment.line}`">
-      <a :href="`vscode://file/${comment.id}:${comment.line}`">{{ comment.type }}: {{ comment.original }}</a>
+    <div class="mt-6">
+      <UTabs :items="items" />
     </div>
 
-    <button @click="refresh">
-      refresh
-    </button>
+    <div class="bg-white rounded-lg">
+      <UTable :columns="columns" :rows="comments">
+        <template #type-data="{ row }">
+          <span class="capitalize">{{ row.type }}</span>
+        </template>
+      </UTable>
+    </div>
   </div>
 </template>

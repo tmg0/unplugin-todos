@@ -10,6 +10,8 @@ export default defineNuxtConfig({
     },
   },
 
+  modules: ['@nuxt/ui'],
+
   nitro: {
     output: {
       dir: '../../dist',
