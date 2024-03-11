@@ -44,7 +44,7 @@ export function createInternalContext(options: TodosOptions): TodosContext {
   async function runUI(): Promise<void> {
     const endpoint = 'node_modules/unplugin-todos/dist/server/index.mjs'
     execa('node', ['-r', 'dotenv/config', endpoint])
-    await until(() => checkPort(3000))
+    await until(() => checkPort(3000), false)
   }
 
   async function createConnecton() {
