@@ -95,6 +95,8 @@ export function createInternalContext(options: TodosOptions): TodosContext {
       onReceived(_, message) {
         if (message.type === 'get:comments')
           getComments()
+        if (message.type.includes('patch:comment'))
+          patchCommentTag(message.type, message.data, ctx)
       },
     })
 
@@ -113,4 +115,22 @@ function updateComments(code: string | MagicString, id: string, ctx: TodosContex
   })
 
   return ctx.getComments()
+}
+
+async function patchCommentTag(type: string, data: Partial<Comment>, ctx: TodosContext) {
+  if (!data.tag)
+    return
+  const [_method, _domain, key] = type.split(':')
+  const _map = ctx.getCommentMap()
+  if (!_map[key])
+    return
+
+  const { id, tag: prevTag, start } = _map[key]
+  const content = await fse.readFile(id, 'utf-8')
+  const index = content.indexOf(prevTag, start)
+  if (index > -1) {
+    const prefix = content.substring(0, index)
+    const suffix = content.substring(index + prevTag.length)
+    await fse.writeFile(id, `${prefix}${data.tag}${suffix}`, 'utf8')
+  }
 }

@@ -3,13 +3,13 @@
 
 /**
  * TODO: Comment with multiple lines.
- * 
+ *
  * Some feature actions.
  */
 
 // TODO: Comment with inline
 
 /**
- * TOTO: Comment block.
+ * TODO: Comment block.
  */
 </script>

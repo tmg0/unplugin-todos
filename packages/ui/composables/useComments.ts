@@ -4,7 +4,7 @@ import { destr } from 'destr'
 export function useComments() {
   const comments = ref<any[]>([])
 
-  const { status, data, send } = useWebSocket(`ws://${location.host}/api/ws`, {
+  const { status, data, send: _send } = useWebSocket(`ws://${location.host}/api/ws`, {
     autoReconnect: {
       retries: 3,
       delay: 5 * 1000,
@@ -30,12 +30,17 @@ export function useComments() {
   })
 
   function refresh() {
-    send(JSON.stringify({ type: 'get:comments' }))
+    send('get:comments')
+  }
+
+  function send(type: string, data?: any) {
+    _send(JSON.stringify({ type, data }))
   }
 
   return {
     comments,
     status,
     refresh,
+    send,
   }
 }

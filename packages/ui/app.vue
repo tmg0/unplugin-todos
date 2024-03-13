@@ -4,7 +4,7 @@
       unplugin-todos
     </div>
 
-    <div class="pt-12 absolute top-0 mt-12 xl:w-[42rem]">
+    <div class="pt-12 absolute top-0 mt-12 w-[42rem]">
       <NuxtPage />
     </div>
   </div>

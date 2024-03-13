@@ -29,13 +29,15 @@ export interface Comment {
   id: string
   type: 'inline' | 'block'
   original: string
+  tag: string
+  content: string
   start: number
   end: number
   line: number
 }
 
 export interface Message {
-  type: 'ping' | 'pong' | 'connected' | 'put:comments' | 'get:comments'
+  type: string
   data?: any
 }
 

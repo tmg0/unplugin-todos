@@ -7,7 +7,7 @@ import type { Comment, TodosContext } from './types'
 import { h5CommentRE, linefeedRE } from './regexp'
 import { parseVueSFC } from './vue'
 import { detectJavascript } from './detect'
-import { DEFAULT_RESOLVE_COMMENT_OPTIONS } from './constants'
+import { DEFAULT_RESOLVE_COMMENT_OPTIONS, MATCH_TAGS } from './constants'
 
 interface ResolveCommentOptions {
   offsetChar: number
@@ -24,7 +24,7 @@ export function resolveJavascriptComments(code: string | MagicString, id: string
   const ast = detectJavascript(code)
 
   ast.comments?.forEach((comment) => {
-    comments.push({
+    const _c = normalizeComment({
       id,
       type: comment.type === 'CommentBlock' ? 'block' : 'inline',
       original: comment.value,
@@ -32,8 +32,10 @@ export function resolveJavascriptComments(code: string | MagicString, id: string
       end: (comment.end ?? 0) + options.offsetChar,
       line: (comment.loc?.start.line ?? 0) + options.offsetLine,
     })
+    if (_c)
+      comments.push(_c)
   })
-  return comments.map(normalizeComment)
+  return comments
 }
 
 export function resolveHTMLComments(code: string | MagicString, id: string, rawOptions?: Partial<ResolveCommentOptions>): Comment[] {
@@ -50,7 +52,7 @@ export function resolveHTMLComments(code: string | MagicString, id: string, rawO
   while (match) {
     const lf = s.original.slice(0, match.index).match(linefeedRE)?.length ?? 0
 
-    comments.push({
+    const _c = normalizeComment({
       id,
       type: 'block',
       original: match[1],
@@ -59,12 +61,15 @@ export function resolveHTMLComments(code: string | MagicString, id: string, rawO
       line: lf + 1 + options.offsetLine,
     })
 
+    if (_c)
+      comments.push(_c)
+
     match = h5CommentRE.exec(original)
   }
 
   h5CommentRE.lastIndex = 0
 
-  return comments.map(normalizeComment)
+  return comments
 }
 
 export function resolveVueComments(code: string | MagicString, id: string): Comment[] {
@@ -94,16 +99,25 @@ export function resolveVscodeURL(comment: Comment, ctx: TodosContext) {
   }
 }
 
-export function normalizeComment(comment: Comment): Comment {
+export function normalizeComment(comment: Omit<Comment, 'tag' | 'content'>): Comment | undefined {
   const { original } = comment
-  if (comment.type === 'inline')
-    return { ...comment, original: original.trim() }
+
+  const _o = (() => {
+    if (comment.type === 'inline')
+      return original.trim()
+    const lines = original.split('\r\n').map(line => line.trim().replace(/^\s*\*+|\*+\s*$/g, '').trim())
+    return lines.filter(Boolean).join('\n')
+  })()
+
+  const [tag, ...content] = _o.split(':')
+
+  if (!MATCH_TAGS.some(tag => _o.startsWith(tag)))
+    return
 
   return {
     ...comment,
-    original: (() => {
-      const lines = original.split('\r\n').map(line => line.trim().replace(/^\s*\*+|\*+\s*$/g, '').trim())
-      return lines.join('\n')
-    })(),
+    tag,
+    content: content.join(''),
+    original: _o,
   }
 }
