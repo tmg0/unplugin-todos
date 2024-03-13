@@ -31,19 +31,30 @@ function patchComment(row: any, tag: 'DONE' | 'TODO') {
     <div class="rounded-lg mt-6 bg-gray-100 p-4">
       <UTable :columns="columns" :rows="comments" :empty-state="{ label: undefined }">
         <template #tag-data="{ row }">
-          <UBadge color="yellow" variant="soft" size="sm">
+          <UBadge :color="row.tag === 'TODO' ? 'yellow' : 'green'" variant="soft" size="sm">
             {{ row.tag }}
           </UBadge>
         </template>
 
         <template #action-data="{ row }">
           <UButton
+            v-if="row.tag === 'TODO'"
             :ui="{ rounded: 'rounded-full' }"
             icon="i-heroicons-check"
             size="2xs"
-            color="primary"
+            color="green"
             variant="outline"
             @click="patchComment(row, 'DONE')"
+          />
+
+          <UButton
+            v-if="row.tag === 'DONE'"
+            :ui="{ rounded: 'rounded-full' }"
+            icon="i-heroicons-arrow-uturn-left"
+            size="2xs"
+            color="yellow"
+            variant="outline"
+            @click="patchComment(row, 'TODO')"
           />
         </template>
       </UTable>
