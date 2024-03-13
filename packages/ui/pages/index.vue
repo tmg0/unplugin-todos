@@ -1,6 +1,4 @@
 <script setup lang="ts">
-const items = [{ label: 'All' }, { label: 'Board' }, { label: 'Upcoming' }]
-
 const { comments, refresh } = useComments()
 
 const columns = [
@@ -25,12 +23,8 @@ const columns = [
       />
     </div>
 
-    <div class="mt-6">
-      <UTabs :items="items" />
-    </div>
-
-    <div class="bg-white rounded-lg">
-      <UTable :columns="columns" :rows="comments">
+    <div class="rounded-lg mt-6 bg-gray-100 p-4">
+      <UTable :columns="columns" :rows="comments" :empty-state="{ label: undefined }">
         <template #type-data="{ row }">
           <span class="capitalize">{{ row.type }}</span>
         </template>
