@@ -8,7 +8,7 @@
 
 🌓 Friendly todo list with light / dark mode.
 
-📝 Dynamic generate list from code comments.
+📝 Dynamic generation from code comments.
 
 🏷 Support tag filters.
 
