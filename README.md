@@ -1,5 +1,7 @@
 # unplugin-todos
 
+[![NPM version](https://img.shields.io/npm/v/unplugin-todos)](https://www.npmjs.com/package/unplugin-todos)
+
 📋 A universal bundler plugin for generate a task schedule from code comments, powered by [unplugin](https://github.com/unjs/unplugin).
 
 ## Features
