@@ -1,11 +1,11 @@
 /**
- * TODO: Some tansform actions
+ * DONE: Some tansform actions
  */
 
-// DONE: inline comments
+// TODO: Inline comments
 
 /**
- * TODO: Some block comments
+ * DONE: Some block comments
  */
 
 /**

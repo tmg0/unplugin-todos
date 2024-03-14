@@ -3,9 +3,17 @@ const { comments, refresh, send } = useComments()
 
 const columns = [
   { key: 'tag', label: 'Tag' },
-  { key: 'content', label: 'Task' },
+  { key: 'content', label: 'Content' },
   { key: 'action', label: 'Action' },
 ]
+
+const tags = ref<string[]>(['TODO'])
+
+const commentFilterResults = computed(() => {
+  if (!tags.value.length)
+    return comments.value
+  return comments.value.filter(({ tag: _tag }) => tags.value.includes(_tag))
+})
 
 function patchComment(row: any, tag: 'DONE' | 'TODO') {
   send(`patch:comment`, { id: row.id, line: row.line, tag })
@@ -17,7 +25,7 @@ function patchComment(row: any, tag: 'DONE' | 'TODO') {
     <div class="w-full flex items-center justify-between">
       <div class="text-4xl font-bold flex gap-4">
         <span>🚧</span>
-        <span>Daily Todos</span>
+        <span>Todos</span>
       </div>
 
       <UButton
@@ -29,7 +37,14 @@ function patchComment(row: any, tag: 'DONE' | 'TODO') {
     </div>
 
     <div class="rounded-lg mt-6 bg-gray-100 dark:bg-white/10 p-4">
-      <UTable :columns="columns" :rows="comments" :empty-state="{ label: undefined }">
+      <UTable :columns="columns" :rows="commentFilterResults" :empty-state="{ label: undefined }">
+        <template #tag-header>
+          <div class="flex items-center gap-2">
+            <span>Tag</span>
+            <TagFilter v-model:values="tags" />
+          </div>
+        </template>
+
         <template #tag-data="{ row }">
           <UBadge :color="row.tag === 'TODO' ? 'yellow' : 'green'" variant="soft" size="sm">
             {{ row.tag }}
