@@ -1,6 +1,20 @@
 # unplugin-todos
 
-📋 Generate a task schedule from code comments.
+📋 A universal bundler plugin for generate a task schedule from code comments, powered by [unplugin](https://github.com/unjs/unplugin).
+
+## Features
+
+🌓 Friendly todo list with light / dark mode.
+
+📝 Dynamic generate list from code comments.
+
+🏷 Support tag filters.
+
+🖊️ Enable to change the comment tags on ui.
+
+📦 Support common bundlers.
+
+![screenshot](./assets/screenshot.webp)
 
 ## Installation
 
@@ -8,6 +22,8 @@
 # npm
 npm i -D unplugin-todos
 ```
+
+## Usage
 
 <details>
 <summary>Vite</summary><br>
@@ -63,6 +79,22 @@ module.exports = {
 ```
 
 <br></details>
+
+## Playground
+
+See [playground]('./playground')
+
+## Options
+
+### `options.dev`
+
+- Type: `boolean`
+- Default: `true`
+
+### `options.includes`
+
+- Type: `string[]`
+- Default: `[]`
 
 ## License
 
