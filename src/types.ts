@@ -56,7 +56,8 @@ export interface TodosContext {
   runUI: () => Promise<void>
   createConnecton: (baseURL?: string) => Promise<WS>
   updateComments: (code: string, id: string, ctx: TodosContext) => void
-  getCommentMap: () => Record<string, Comment>
+  getCommentMap: () => Record<string, Record<string, Comment>>
+  setCommentMap: (data: Record<string, Record<string, Comment>>) => void
   getComments: () => Comment[]
   getServerPort: () => Promise<number>
 }

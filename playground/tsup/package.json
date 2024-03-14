@@ -1,9 +1,10 @@
 {
-  "name": "@unplugin-todos/play-tsup",
+  "name": "@unplugin-todos/tsup",
   "scripts": {
     "dev": "tsup --watch"
   },
   "devDependencies": {
-    "tsup": "^8.0.2"
+    "tsup": "^8.0.2",
+    "unplugin-todos": "link:../.."
   }
 }

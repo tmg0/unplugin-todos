@@ -1,7 +1,7 @@
 import { destr } from 'destr'
 
 interface Message {
-  type: 'ping' | 'pong' | 'connected' | 'put:comments' | 'get:comments' | 'patch:comment:id'
+  type: 'ping' | 'pong' | 'connected' | 'put:comments' | 'get:comments' | 'patch:comment'
   data?: any
 }
 
@@ -24,7 +24,7 @@ export default defineWebSocketHandler({
       return
     }
 
-    const [method, domain, id] = response.type.split(':')
+    const [method, domain] = response.type.split(':')
 
     if (method === 'put')
       peer.publish('channel', defineResponse(`put:${domain}` as Message['type'], response.data))
@@ -33,6 +33,6 @@ export default defineWebSocketHandler({
       peer.publish('channel', defineResponse(`get:${domain}` as Message['type']))
 
     if (method === 'patch')
-      peer.publish('channel', defineResponse(`patch:${domain}:${id}` as Message['type'], response.data))
+      peer.publish('channel', defineResponse(`patch:${domain}` as Message['type'], response.data))
   },
 })

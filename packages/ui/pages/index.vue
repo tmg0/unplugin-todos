@@ -8,7 +8,7 @@ const columns = [
 ]
 
 function patchComment(row: any, tag: 'DONE' | 'TODO') {
-  send(`patch:comment:${row.id}|${row.line}`, { tag })
+  send(`patch:comment`, { id: row.id, line: row.line, tag })
 }
 </script>
 

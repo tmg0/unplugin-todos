@@ -37,7 +37,8 @@ export function createInternalContext(options: TodosOptions): TodosContext {
   let ws: WS | undefined
   let port: number | undefined
   let isRunning = false
-  const _map: Record<string, Comment> = {}
+
+  let _map: Record<string, Record<string, Comment>> = {}
 
   const ctx = {
     version,
@@ -46,6 +47,7 @@ export function createInternalContext(options: TodosOptions): TodosContext {
     createConnecton,
     updateComments,
     getCommentMap,
+    setCommentMap,
     getComments,
     getServerPort,
   }
@@ -54,8 +56,15 @@ export function createInternalContext(options: TodosOptions): TodosContext {
     return _map
   }
 
+  function setCommentMap(data: typeof _map) {
+    _map = data
+  }
+
   function getComments() {
-    const _c = Object.values(_map)
+    const _c: Comment[] = []
+    Object.values(_map).forEach((_l) => {
+      _c.push(...Object.values(_l))
+    })
     ws?.put('comments', _c)
     return _c
   }
@@ -94,8 +103,8 @@ export function createInternalContext(options: TodosOptions): TodosContext {
       onReceived(_, message) {
         if (message.type === 'get:comments')
           getComments()
-        if (message.type.includes('patch:comment'))
-          replaceCommentTag(message.type, message.data?.tag, ctx)
+        if (message.type === 'patch:comment')
+          replaceCommentTag(message.data, ctx)
       },
     })
 
@@ -106,30 +115,32 @@ export function createInternalContext(options: TodosOptions): TodosContext {
 }
 
 function updateComments(code: string, id: string, ctx: TodosContext) {
-  const _map = ctx.getCommentMap()
+  const _map: Record<string, Record<string, Comment>> = {}
 
   resolveCommenets(code, id).forEach((comment) => {
-    const _key = `${comment.id}|${comment.line}`
-    _map[_key] = comment
+    if (!_map[comment.id])
+      _map[comment.id] = {}
+    _map[comment.id][comment.line] = comment
   })
 
+  ctx.setCommentMap(_map)
   return ctx.getComments()
 }
 
-async function replaceCommentTag(type: string, tag: string, ctx: TodosContext) {
-  if (!tag)
-    return
-  const [_method, _domain, key] = type.split(':')
-  const _map = ctx.getCommentMap()
-  if (!_map[key])
+async function replaceCommentTag(data: Comment, ctx: TodosContext) {
+  if (!data.tag)
     return
 
-  const { id, tag: prevTag, start } = _map[key]
+  const _map = ctx.getCommentMap()
+  if (!_map[data.id] || !_map[data.id][data.line])
+    return
+
+  const { id, tag: prevTag, start } = _map[data.id][data.line]
   const content = await fse.readFile(id, 'utf-8')
   const index = content.indexOf(prevTag, start)
   if (index > -1) {
     const prefix = content.substring(0, index)
     const suffix = content.substring(index + prevTag.length)
-    await fse.writeFile(id, `${prefix}${tag}${suffix}`, 'utf8')
+    await fse.writeFile(id, `${prefix}${data.tag}${suffix}`, 'utf8')
   }
 }

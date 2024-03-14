@@ -118,12 +118,3 @@ export function normalizeComment(comment: Omit<Comment, 'tag' | 'content'>): Com
     original: _o,
   }
 }
-
-export function resolveCommentMapKey(key: string) {
-  const [id, line] = key.split('|')
-
-  return {
-    id,
-    line,
-  }
-}
