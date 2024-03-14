@@ -8,7 +8,7 @@ export default defineAppConfig({
         base: 'even:bg-white/50',
       },
       th: {
-        base: 'first:rounded-l-lg last:rounded-r-lg bg-white overflow-hidden',
+        base: 'first:rounded-l-lg last:rounded-r-lg bg-white dark:bg-white/10 overflow-hidden',
         padding: 'px-4 py-2.5',
       },
       td: {

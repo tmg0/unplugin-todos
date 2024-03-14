@@ -28,7 +28,7 @@ function patchComment(row: any, tag: 'DONE' | 'TODO') {
       />
     </div>
 
-    <div class="rounded-lg mt-6 bg-gray-100 p-4">
+    <div class="rounded-lg mt-6 bg-gray-100 dark:bg-white/10 p-4">
       <UTable :columns="columns" :rows="comments" :empty-state="{ label: undefined }">
         <template #tag-data="{ row }">
           <UBadge :color="row.tag === 'TODO' ? 'yellow' : 'green'" variant="soft" size="sm">
