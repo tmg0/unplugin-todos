@@ -36,6 +36,12 @@ function patchComment(row: any, tag: 'DONE' | 'TODO') {
           </UBadge>
         </template>
 
+        <template #content-data="{ row }">
+          <VSCodeLink :filename="row.id" :line="row.line">
+            {{ row.content }}
+          </VSCodeLink>
+        </template>
+
         <template #action-data="{ row }">
           <UButton
             v-if="row.tag === 'TODO'"

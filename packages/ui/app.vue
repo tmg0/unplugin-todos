@@ -1,6 +1,6 @@
 <template>
   <div class="w-screen min-h-screen overflow-y-auto overflow-x-hidden flex flex-col items-center relative bg-slate-200 dark:bg-slate-900">
-    <div class="w-full flex items-center justify-between px-4 py-3 fixed top-0 inset-x-0 backdrop-blur-lg z-10 bg-white/50 dark:bg-white/5 shadow-lg shadow-black/5">
+    <div class="w-full flex items-center justify-between px-4 py-3 fixed top-0 inset-x-0 backdrop-blur-lg z-20 bg-white/50 dark:bg-white/5 shadow-lg shadow-black/5">
       <span class="font-bold">unplugin-todos</span>
       <ThemeSwitch />
     </div>
