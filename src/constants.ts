@@ -3,8 +3,8 @@ import { isDevelopment } from 'std-env'
 export const DEFAULT_TODOS_OPTIONS = {
   dev: isDevelopment,
   rootDir: '.',
-  include: [/\.[jt]sx?$/, /\.vue$/, /\.vue\?vue/, /\.svelte$/],
-  exclude: [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/],
+  include: [],
+  exclude: [],
 }
 
 export const DEFAULT_RESOLVE_COMMENT_OPTIONS = {

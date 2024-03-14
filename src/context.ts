@@ -6,11 +6,13 @@ import { checkPort, getRandomPort } from 'get-port-please'
 import { read, write } from 'rc9'
 import { consola } from 'consola'
 import { colors } from 'consola/utils'
+import fg from 'fast-glob'
+import chokidar from 'chokidar'
 import { version } from '../package.json'
 import type { Comment, TodosContext, TodosOptions, WS } from './types'
 import { resolveCommenets } from './resolvers'
 import { createWebsocket, getServerBaseURL } from './ws'
-import { until } from './utils'
+import { generateFileHash, until } from './utils'
 
 const UNPLUGIN_TODOS_DIR = join(process.cwd(), 'node_modules/unplugin-todos')
 const UNPLUGIN_TODOS_ENV = join(UNPLUGIN_TODOS_DIR, '.env')
@@ -18,13 +20,30 @@ const UNPLUGIN_TODOS_ENV = join(UNPLUGIN_TODOS_DIR, '.env')
 export function createTodos(options: TodosOptions) {
   const ctx = createInternalContext(options)
 
-  function updateCommentsWithContext(code: string, id: string) {
+  function updateCommentsWithContext(id: string) {
+    const code = fse.readFileSync(id, 'utf-8')
     return ctx.updateComments(code, id, ctx)
+  }
+
+  async function setupWatcher() {
+    const files = await fg(options.includes, { dot: true, absolute: true })
+    const watcher = chokidar.watch(files, { persistent: true })
+
+    watcher.on('change', (id) => {
+      const hash = generateFileHash(id)
+      if (hash === ctx.getFileHash(id))
+        return
+      updateCommentsWithContext(id)
+      ctx.setFileHash(id, hash)
+    })
+
+    files.forEach(updateCommentsWithContext)
   }
 
   async function setup() {
     await ctx.runUI()
     await ctx.createConnecton()
+    await setupWatcher()
   }
 
   return {
@@ -32,6 +51,8 @@ export function createTodos(options: TodosOptions) {
     updateComments: updateCommentsWithContext,
     getCommentMap: ctx.getCommentMap,
     getComments: ctx.getComments,
+    getFileHash: ctx.getFileHash,
+    setFileHash: ctx.setFileHash,
   }
 }
 
@@ -39,6 +60,7 @@ export function createInternalContext(options: TodosOptions): TodosContext {
   let ws: WS | undefined
   let port: number | undefined
   let isRunning = false
+  const fileHashRecord: Record<string, string> = {}
 
   let _map: Record<string, Record<string, Comment>> = {}
 
@@ -52,6 +74,8 @@ export function createInternalContext(options: TodosOptions): TodosContext {
     setCommentMap,
     getComments,
     getServerPort,
+    getFileHash,
+    setFileHash,
   }
 
   function getCommentMap() {
@@ -69,6 +93,14 @@ export function createInternalContext(options: TodosOptions): TodosContext {
     })
     ws?.put('comments', _c)
     return _c
+  }
+
+  function getFileHash(id: string) {
+    return fileHashRecord[id]
+  }
+
+  function setFileHash(id: string, hash: string) {
+    fileHashRecord[id] = hash
   }
 
   async function getServerPort() {
@@ -120,15 +152,11 @@ export function createInternalContext(options: TodosOptions): TodosContext {
 }
 
 function updateComments(code: string, id: string, ctx: TodosContext) {
-  const _map: Record<string, Record<string, Comment>> = {}
-
+  const _map = ctx.getCommentMap()
+  _map[id] = {}
   resolveCommenets(code, id).forEach((comment) => {
-    if (!_map[comment.id])
-      _map[comment.id] = {}
-    _map[comment.id][comment.line] = comment
+    _map[id][comment.line] = comment
   })
-
-  ctx.setCommentMap(_map)
   return ctx.getComments()
 }
 

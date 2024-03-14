@@ -1,12 +1,11 @@
 import type { parse } from '@babel/parser'
-import type { FilterPattern } from '@rollup/pluginutils'
 import type WebSocket from 'ws'
 
 export interface TodosOptions {
   dev: boolean
   rootDir: string
-  include: FilterPattern
-  exclude: FilterPattern
+  includes: string[]
+  excludes: string[]
 }
 
 export interface VueSFCTagContent {
@@ -60,4 +59,6 @@ export interface TodosContext {
   setCommentMap: (data: Record<string, Record<string, Comment>>) => void
   getComments: () => Comment[]
   getServerPort: () => Promise<number>
+  getFileHash: (id: string) => string
+  setFileHash: (id: string, hash: string) => void
 }

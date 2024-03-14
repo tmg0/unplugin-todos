@@ -5,6 +5,9 @@ export default defineConfig({
   entry: ['src/index.ts'],
   clean: true,
   esbuildPlugins: [
-    Todos.esbuild({}),
+    Todos.esbuild({
+      dev: true,
+      includes: ['src/**/*.ts'],
+    }),
   ],
 })

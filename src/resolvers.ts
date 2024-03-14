@@ -1,6 +1,6 @@
 import process from 'node:process'
+import { join } from 'node:path'
 import { defu } from 'defu'
-import { join } from 'pathe'
 import { isHTML, isJavascript, isVue } from './utils'
 import type { Comment, TodosContext } from './types'
 import { h5CommentRE, linefeedRE } from './regexp'
@@ -102,7 +102,7 @@ export function normalizeComment(comment: Omit<Comment, 'tag' | 'content'>): Com
   const _o = (() => {
     if (comment.type === 'inline')
       return original.trim()
-    const lines = original.split('\r\n').map(line => line.trim().replace(/^\s*\*+|\*+\s*$/g, '').trim())
+    const lines = original.split('\n').map(line => line.trim().replace(/^\s*\*+|\*+\s*$/g, '').trim())
     return lines.filter(Boolean).join('\n')
   })()
 
