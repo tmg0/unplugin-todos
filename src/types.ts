@@ -1,6 +1,5 @@
 import type { parse } from '@babel/parser'
 import type { FilterPattern } from '@rollup/pluginutils'
-import type MagicString from 'magic-string'
 import type WebSocket from 'ws'
 
 export interface TodosOptions {
@@ -17,7 +16,7 @@ export interface VueSFCTagContent {
 }
 
 export interface VueSFC {
-  s: MagicString
+  s: string
   id: string
   script: VueSFCTagContent
   template: VueSFCTagContent
@@ -56,7 +55,7 @@ export interface TodosContext {
 
   runUI: () => Promise<void>
   createConnecton: (baseURL?: string) => Promise<WS>
-  updateComments: (code: string | MagicString, id: string, ctx: TodosContext) => void
+  updateComments: (code: string, id: string, ctx: TodosContext) => void
   getCommentMap: () => Record<string, Comment>
   getComments: () => Comment[]
   getServerPort: () => Promise<number>

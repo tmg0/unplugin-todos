@@ -1,8 +1,7 @@
 import process from 'node:process'
-import type MagicString from 'magic-string'
 import { defu } from 'defu'
 import { join } from 'pathe'
-import { getMagicString, isHTML, isJavascript, isVue } from './utils'
+import { isHTML, isJavascript, isVue } from './utils'
 import type { Comment, TodosContext } from './types'
 import { h5CommentRE, linefeedRE } from './regexp'
 import { parseVueSFC } from './vue'
@@ -18,7 +17,7 @@ function resolveOptions(rawOptions: Partial<ResolveCommentOptions> = {}) {
   return defu(rawOptions, DEFAULT_RESOLVE_COMMENT_OPTIONS) as ResolveCommentOptions
 }
 
-export function resolveJavascriptComments(code: string | MagicString, id: string, rawOptions?: Partial<ResolveCommentOptions>): Comment[] {
+export function resolveJavascriptComments(code: string, id: string, rawOptions?: Partial<ResolveCommentOptions>): Comment[] {
   const options = resolveOptions(rawOptions)
   const comments: Comment[] = []
   const ast = detectJavascript(code)
@@ -38,19 +37,17 @@ export function resolveJavascriptComments(code: string | MagicString, id: string
   return comments
 }
 
-export function resolveHTMLComments(code: string | MagicString, id: string, rawOptions?: Partial<ResolveCommentOptions>): Comment[] {
+export function resolveHTMLComments(code: string, id: string, rawOptions?: Partial<ResolveCommentOptions>): Comment[] {
   if (!code)
     return []
 
   const options = resolveOptions(rawOptions)
   const comments: Comment[] = []
-  const s = getMagicString(code)
 
-  const original = s.original
-  let match = h5CommentRE.exec(original)
+  let match = h5CommentRE.exec(code)
 
   while (match) {
-    const lf = s.original.slice(0, match.index).match(linefeedRE)?.length ?? 0
+    const lf = code.slice(0, match.index).match(linefeedRE)?.length ?? 0
 
     const _c = normalizeComment({
       id,
@@ -64,7 +61,7 @@ export function resolveHTMLComments(code: string | MagicString, id: string, rawO
     if (_c)
       comments.push(_c)
 
-    match = h5CommentRE.exec(original)
+    match = h5CommentRE.exec(code)
   }
 
   h5CommentRE.lastIndex = 0
@@ -72,7 +69,7 @@ export function resolveHTMLComments(code: string | MagicString, id: string, rawO
   return comments
 }
 
-export function resolveVueComments(code: string | MagicString, id: string): Comment[] {
+export function resolveVueComments(code: string, id: string): Comment[] {
   const sfc = parseVueSFC(code, id)
   return [
     ...resolveJavascriptComments(sfc.script.code, sfc.id, { offsetChar: sfc.script.start }),
@@ -80,7 +77,7 @@ export function resolveVueComments(code: string | MagicString, id: string): Comm
   ]
 }
 
-export function resolveCommenets(code: string | MagicString, id: string): Comment[] {
+export function resolveCommenets(code: string, id: string): Comment[] {
   if (isJavascript(id))
     return resolveJavascriptComments(code, id)
   if (isHTML(id))
@@ -119,5 +116,14 @@ export function normalizeComment(comment: Omit<Comment, 'tag' | 'content'>): Com
     tag,
     content: content.join(''),
     original: _o,
+  }
+}
+
+export function resolveCommentMapKey(key: string) {
+  const [id, line] = key.split('|')
+
+  return {
+    id,
+    line,
   }
 }

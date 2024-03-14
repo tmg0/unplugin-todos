@@ -1,6 +1,5 @@
 import { join } from 'node:path'
 import process from 'node:process'
-import type MagicString from 'magic-string'
 import { execa } from 'execa'
 import fse from 'fs-extra'
 import { checkPort, getRandomPort } from 'get-port-please'
@@ -17,7 +16,7 @@ const UNPLUGIN_TODOS_ENV = join(UNPLUGIN_TODOS_DIR, '.env')
 export function createTodos(options: TodosOptions) {
   const ctx = createInternalContext(options)
 
-  function updateCommentsWithContext(code: string | MagicString, id: string) {
+  function updateCommentsWithContext(code: string, id: string) {
     return ctx.updateComments(code, id, ctx)
   }
 
@@ -106,7 +105,7 @@ export function createInternalContext(options: TodosOptions): TodosContext {
   return ctx
 }
 
-function updateComments(code: string | MagicString, id: string, ctx: TodosContext) {
+function updateComments(code: string, id: string, ctx: TodosContext) {
   const _map = ctx.getCommentMap()
 
   resolveCommenets(code, id).forEach((comment) => {

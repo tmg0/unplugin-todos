@@ -1,6 +1,5 @@
 import { createUnplugin } from 'unplugin'
 import { createFilter } from '@rollup/pluginutils'
-import MagicString from 'magic-string'
 import type { TodosOptions } from './types'
 import { resolveOptions } from './options'
 import { createTodos } from './context'
@@ -31,14 +30,9 @@ const unplugin = createUnplugin<Partial<TodosOptions> | undefined>((rawOptions =
       if (!options.dev)
         return
 
-      const s = new MagicString(code)
-
       ctx.updateComments(code, id)
 
-      return {
-        code: s.toString(),
-        map: s.generateMap(),
-      }
+      return undefined
     },
     async buildStart() {
       if (options.dev)

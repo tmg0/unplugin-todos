@@ -1,5 +1,3 @@
-import type MagicString from 'magic-string'
-import { getMagicString } from './utils'
 import { vueScriptTagRE, vueTemplateTagRE } from './regexp'
 import type { VueSFC, VueSFCTagContent } from './types'
 
@@ -24,15 +22,12 @@ function matchTagContent(original: string, re: RegExp): VueSFCTagContent {
   }
 }
 
-export function parseVueSFC(code: string | MagicString, id: string): VueSFC {
-  const s = getMagicString(code)
-  const original = s.original
-
-  const script = matchTagContent(original, vueScriptTagRE)
-  const template = matchTagContent(original, vueTemplateTagRE)
+export function parseVueSFC(code: string, id: string): VueSFC {
+  const script = matchTagContent(code, vueScriptTagRE)
+  const template = matchTagContent(code, vueTemplateTagRE)
 
   return {
-    s,
+    s: code,
     id,
     script,
     template,
