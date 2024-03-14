@@ -4,6 +4,8 @@ import { execa } from 'execa'
 import fse from 'fs-extra'
 import { checkPort, getRandomPort } from 'get-port-please'
 import { read, write } from 'rc9'
+import { consola } from 'consola'
+import { colors } from 'consola/utils'
 import { version } from '../package.json'
 import type { Comment, TodosContext, TodosOptions, WS } from './types'
 import { resolveCommenets } from './resolvers'
@@ -92,8 +94,11 @@ export function createInternalContext(options: TodosOptions): TodosContext {
     const port = await getServerPort()
     await fse.ensureFile(UNPLUGIN_TODOS_ENV)
     write({ PORT: port }, { name: '.env', flat: true, dir: UNPLUGIN_TODOS_DIR })
-    execa('node', ['-r', 'dotenv/config', endpoint], { cwd: UNPLUGIN_TODOS_DIR, stdio: 'inherit' })
+    execa('node', ['-r', 'dotenv/config', endpoint], { cwd: UNPLUGIN_TODOS_DIR })
     await until(() => checkPort(port), false)
+    const prefix = `${colors.magenta('unplugin-todos')} ${colors.gray(`v${ctx.version}`)}`
+    const host = colors.blue(`http://localhost:${port}/`)
+    consola.box(`${prefix}\n\nRunning on: ${host}`)
     isRunning = true
   }
 

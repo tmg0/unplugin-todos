@@ -48,6 +48,7 @@
     "@rollup/pluginutils": "^5.1.0",
     "@vue/compiler-sfc": "^3.4.21",
     "acorn": "^8.11.3",
+    "consola": "^3.2.3",
     "defu": "^6.1.4",
     "destr": "^2.0.3",
     "dotenv": "^16.4.5",
