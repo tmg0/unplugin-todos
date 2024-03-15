@@ -53,9 +53,6 @@ importers:
       rc9:
         specifier: ^2.1.1
         version: 2.1.1
-      std-env:
-        specifier: ^3.7.0
-        version: 3.7.0
       unplugin:
         specifier: ^1.8.0
         version: 1.8.0
@@ -78,6 +75,9 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
+      jiti:
+        specifier: ^1.21.0
+        version: 1.21.0
       taze:
         specifier: ^0.13.3
         version: 0.13.3

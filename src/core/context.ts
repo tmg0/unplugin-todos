@@ -126,8 +126,17 @@ export function createInternalContext(options: TodosOptions): TodosContext {
   async function runUI(): Promise<void> {
     if (isRunning)
       return
-    const endpoint = join(UNPLUGIN_TODOS_DIR, 'dist/server/index.mjs')
+
     const port = await getServerPort()
+
+    if (options._debug) {
+      execa('pnpm', ['dev:ui'], { stdio: 'inherit' })
+      await until(() => checkPort(port), false)
+      isRunning = true
+      return
+    }
+
+    const endpoint = join(UNPLUGIN_TODOS_DIR, 'dist/server/index.mjs')
     await fse.ensureFile(UNPLUGIN_TODOS_ENV)
     write({ PORT: port }, { name: '.env', flat: true, dir: UNPLUGIN_TODOS_DIR })
     execa('node', ['-r', 'dotenv/config', endpoint], { cwd: UNPLUGIN_TODOS_DIR })

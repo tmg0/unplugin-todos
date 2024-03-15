@@ -1,10 +1,10 @@
-import { isDevelopment } from 'std-env'
-
 export const DEFAULT_TODOS_OPTIONS = {
-  dev: isDevelopment,
+  dev: true,
   rootDir: '.',
   include: [],
   exclude: [],
+
+  _debug: false,
 }
 
 export const DEFAULT_RESOLVE_COMMENT_OPTIONS = {

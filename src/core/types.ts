@@ -6,6 +6,8 @@ export interface TodosOptions {
   rootDir: string
   includes: string[]
   excludes: string[]
+
+  _debug: boolean
 }
 
 export interface VueSFCTagContent {
