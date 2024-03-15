@@ -6,7 +6,6 @@ import { checkPort, getRandomPort } from 'get-port-please'
 import { read, write } from 'rc9'
 import { consola } from 'consola'
 import { colors } from 'consola/utils'
-import fg from 'fast-glob'
 import chokidar from 'chokidar'
 import { version } from '../../package.json'
 import type { Comment, TodosContext, TodosOptions, WS } from './types'
@@ -28,8 +27,7 @@ export function createTodos(rawOptions: Partial<TodosOptions> = {}) {
   }
 
   async function setupWatcher() {
-    const files = await fg(options.includes, { dot: true, absolute: true })
-    const watcher = chokidar.watch(files, { persistent: true })
+    const watcher = chokidar.watch(options.includes, { persistent: true })
 
     watcher.on('change', (id) => {
       const hash = generateFileHash(id)
@@ -39,7 +37,9 @@ export function createTodos(rawOptions: Partial<TodosOptions> = {}) {
       ctx.setFileHash(id, hash)
     })
 
-    files.forEach(updateCommentsWithContext)
+    watcher.on('add', (id) => {
+      updateCommentsWithContext(id)
+    })
   }
 
   async function setup() {
