@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 const props = defineProps<{
   filename: string
-  line: string
+  line: string | number
 }>()
 
 const anchor = computed(() => `vscode://file/${props.filename}:${props.line}`)

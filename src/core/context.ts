@@ -22,8 +22,7 @@ export function createTodos(rawOptions: Partial<TodosOptions> = {}) {
   const ctx = createInternalContext(options)
 
   function updateCommentsWithContext(id: string) {
-    const code = fse.readFileSync(id, 'utf-8')
-    return ctx.updateComments(code, id, ctx)
+    return ctx.updateComments(id, ctx)
   }
 
   async function setupWatcher() {
@@ -158,10 +157,11 @@ export function createInternalContext(options: TodosOptions): TodosContext {
   return ctx
 }
 
-function updateComments(code: string, id: string, ctx: TodosContext) {
+function updateComments(id: string, ctx: TodosContext) {
   const _map = ctx.getCommentMap()
+  const _code = fse.readFileSync(id, 'utf-8')
   _map[id] = {}
-  resolveCommenets(code, id).forEach((comment) => {
+  resolveCommenets(_code, id).forEach((comment) => {
     _map[id][comment.line] = comment
   })
   return ctx.getComments()
