@@ -45,7 +45,6 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@babel/parser": "^7.24.0",
     "@vue/compiler-sfc": "^3.4.21",
     "acorn": "^8.11.3",
     "chokidar": "^3.6.0",

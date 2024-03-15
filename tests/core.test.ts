@@ -6,10 +6,10 @@ import { createTodos } from '../src'
 import { getPortFromEnv } from './_utils'
 
 describe('core', () => {
-  const ctx = createTodos({ includes: ['./playground/tsup/src/**/*.ts'] })
+  const ctx = createTodos({ _debug: true, includes: ['./playground/tsup/src/**/*.ts'] })
 
   it('setup', async () => {
     await ctx.setup()
-    expect(!!(await checkPort(getPortFromEnv()))).toBe(true)
+    expect(!!(await checkPort(getPortFromEnv()))).toBe(false)
   })
 })

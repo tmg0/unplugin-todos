@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@babel/parser':
-        specifier: ^7.24.0
-        version: 7.24.0
       '@vue/compiler-sfc':
         specifier: ^3.4.21
         version: 3.4.21

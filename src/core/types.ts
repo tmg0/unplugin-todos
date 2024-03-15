@@ -1,4 +1,3 @@
-import type { parse } from '@babel/parser'
 import type WebSocket from 'ws'
 
 export interface TodosOptions {
@@ -22,8 +21,6 @@ export interface VueSFC {
   script: VueSFCTagContent
   template: VueSFCTagContent
 }
-
-export type JsAST = ReturnType<typeof parse>
 
 export interface Comment {
   id: string

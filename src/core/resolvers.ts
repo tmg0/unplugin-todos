@@ -3,9 +3,8 @@ import { join } from 'node:path'
 import { defu } from 'defu'
 import { isHTML, isJavascript, isVue } from './utils'
 import type { Comment, TodosContext } from './types'
-import { h5CommentRE, linefeedRE } from './regexp'
+import { h5CommentRE, jsCommentRE, linefeedRE } from './regexp'
 import { parseVueSFC } from './vue'
-import { detectJavascript } from './detect'
 import { DEFAULT_RESOLVE_COMMENT_OPTIONS, MATCH_TAGS } from './constants'
 
 interface ResolveCommentOptions {
@@ -18,22 +17,37 @@ function resolveOptions(rawOptions: Partial<ResolveCommentOptions> = {}) {
 }
 
 export function resolveJavascriptComments(code: string, id: string, rawOptions?: Partial<ResolveCommentOptions>): Comment[] {
+  if (!code)
+    return []
+
   const options = resolveOptions(rawOptions)
   const comments: Comment[] = []
-  const ast = detectJavascript(code)
 
-  ast.comments?.forEach((comment) => {
+  let match = jsCommentRE.exec(code)
+
+  while (match) {
+    const lf = code.slice(0, match.index).match(linefeedRE)?.length ?? 0
+
+    const type = match[1] ? 'inline' : 'block'
+    const original = type === 'inline' ? match[1] : match[2]
+
     const _c = normalizeComment({
       id,
-      type: comment.type === 'CommentBlock' ? 'block' : 'inline',
-      original: comment.value,
-      start: (comment.start ?? 0) + options.offsetChar,
-      end: (comment.end ?? 0) + options.offsetChar,
-      line: (comment.loc?.start.line ?? 0) + options.offsetLine,
+      type,
+      original,
+      start: match.index + options.offsetChar,
+      end: match.index + original.length + options.offsetChar,
+      line: lf + 1 + options.offsetLine,
     })
+
     if (_c)
       comments.push(_c)
-  })
+
+    match = jsCommentRE.exec(code)
+  }
+
+  jsCommentRE.lastIndex = 0
+
   return comments
 }
 
@@ -101,7 +115,7 @@ export function normalizeComment(comment: Omit<Comment, 'tag' | 'content'>): Com
 
   const _o = (() => {
     if (comment.type === 'inline')
-      return original.trim()
+      return original?.trim() ?? ''
     const lines = original.split('\n').map(line => line.trim().replace(/^\s*\*+|\*+\s*$/g, '').trim())
     return lines.filter(Boolean).join('\n')
   })()

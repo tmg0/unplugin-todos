@@ -129,17 +129,11 @@ export function createInternalContext(options: TodosOptions): TodosContext {
 
     const port = await getServerPort()
 
-    if (options._debug) {
-      execa('pnpm', ['dev:ui'], { stdio: 'inherit' })
-      await until(() => checkPort(port), false)
-      isRunning = true
-      return
-    }
-
-    const endpoint = join(UNPLUGIN_TODOS_DIR, 'dist/server/index.mjs')
+    const root = options._debug ? '.' : UNPLUGIN_TODOS_DIR
+    const endpoint = join(root, 'dist/server/index.mjs')
     await fse.ensureFile(UNPLUGIN_TODOS_ENV)
-    write({ PORT: port }, { name: '.env', flat: true, dir: UNPLUGIN_TODOS_DIR })
-    execa('node', ['-r', 'dotenv/config', endpoint], { cwd: UNPLUGIN_TODOS_DIR })
+    write({ PORT: port }, { name: '.env', flat: true, dir: root })
+    execa('node', ['-r', 'dotenv/config', endpoint], { cwd: root })
     await until(() => checkPort(port), false)
     const prefix = `${colors.magenta('unplugin-todos')} ${colors.gray(`v${ctx.version}`)}`
     const host = colors.blue(`http://localhost:${port}/`)
