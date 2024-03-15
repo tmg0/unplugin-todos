@@ -13,11 +13,13 @@ import type { Comment, TodosContext, TodosOptions, WS } from './types'
 import { resolveCommenets } from './resolvers'
 import { createWebsocket, getServerBaseURL } from './ws'
 import { generateFileHash, until } from './utils'
+import { resolveOptions } from './options'
 
 const UNPLUGIN_TODOS_DIR = join(process.cwd(), 'node_modules/unplugin-todos')
 const UNPLUGIN_TODOS_ENV = join(UNPLUGIN_TODOS_DIR, '.env')
 
-export function createTodos(options: TodosOptions) {
+export function createTodos(rawOptions: Partial<TodosOptions> = {}) {
+  const options = resolveOptions(rawOptions)
   const ctx = createInternalContext(options)
 
   function updateCommentsWithContext(id: string) {
@@ -41,6 +43,8 @@ export function createTodos(options: TodosOptions) {
   }
 
   async function setup() {
+    if (!options.dev)
+      return
     await ctx.runUI()
     await ctx.createConnecton()
     await setupWatcher()

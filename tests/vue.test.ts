@@ -1,14 +1,12 @@
-/// <reference types="vite/client" />
-
 import { basename } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { resolveVueComments } from '../src/resolvers'
+import { resolveVueComments } from '../src/core/resolvers'
 
-const fixtures = import.meta.glob('./fixtures/*.vue', { as: 'raw', eager: true })
+const caces = import.meta.glob('./caces/*.vue', { as: 'raw', eager: true })
 
 describe('vue.js', () => {
-  Object.entries(fixtures).forEach(([id, raw]) => {
-    it(`fixture ${basename(id)}`, async () => {
+  Object.entries(caces).forEach(([id, raw]) => {
+    it(`caces ${basename(id)}`, async () => {
       const comments = resolveVueComments(raw, id)
       expect(!!comments.length).toBe(true)
     })
