@@ -3,7 +3,7 @@ import type { TodosOptions } from './types'
 import { resolveOptions } from './options'
 import { createTodos } from './context'
 
-const unplugin = createUnplugin<Partial<TodosOptions> | undefined>((rawOptions = {}) => {
+export const unplugin = createUnplugin<Partial<TodosOptions> | undefined>((rawOptions = {}) => {
   const options = resolveOptions(rawOptions)
   const ctx = createTodos(options)
 
@@ -14,5 +14,3 @@ const unplugin = createUnplugin<Partial<TodosOptions> | undefined>((rawOptions =
     name: 'todos',
   }
 })
-
-export default unplugin
